@@ -19,7 +19,7 @@ OBJ_DIR     = source/
 BIN_DIR     = ./
 
 # Source files
-SRC_FILE    = minishell_main.c minishell_signals.c
+SRC_FILE    = minishell_main.c minishell_signals.c minishell_exit.c
 SRC         = $(addprefix $(SRC_DIR), $(SRC_FILE))
 OBJ_FILE    = $(SRC_FILE:.c=.o)
 OBJ         = $(addprefix $(OBJ_DIR), $(OBJ_FILE))

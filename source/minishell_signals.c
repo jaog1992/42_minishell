@@ -25,7 +25,11 @@ void	signal_handler(int num)
 {
 	(void)num;
 	if (rl_on_new_line() == -1)
+	{
+		printf("ctrl+d?\n");
 		exit(-1);
+
+	}
 	write(1, "\n", 1);
 	rl_replace_line("", 1);
 	rl_redisplay();
