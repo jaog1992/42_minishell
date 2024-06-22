@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "../libft/source/libft.h"
+#include <readline/history.h>
+#include <readline/readline.h>
 
 char *ft_getenvval(char** env, char *str)
 {
@@ -47,15 +50,9 @@ char *ft_getenvval(char** env, char *str)
 char	*get_str(char **env)
 {
 	char	*aux;
-	char	*user;
-	char	*shell;
 	char	*str;
 
-    user = ft_strjoin(ft_getenvval(env, "USER="), "@");
-    shell = ft_strjoin(ft_getenvval(env, "_=./"), " $");
-    aux = ft_strjoin(user, shell);
-    free(user);
-    free(shell);
+	aux = ft_strjoin(ft_getenvval(env, "USER="), "@minishell ");
 	str = readline(aux);
 	if (!str)
 	{
@@ -76,15 +73,13 @@ char	*get_str(char **env)
 	return (aux);
 }
 
-void	ft_program(char **env2)
+void	ft_program(char **env)
 {
-	int	 ret;
     char *str;
 
-	ret = 0;
 	ft_signals();
-	str = get_str(env2);
-    printf("The string is %s\n", str);
+    str = get_str(env);
+    //printf("The string is %s\n", str);
 	//if (str && *str != '\0')
 	//{
 	//	ft_exit(str);
@@ -103,28 +98,28 @@ void	ft_program(char **env2)
 	//		free_d_array(*tokens);
 	//}
 	//else if (str)
-	//	free(str);
+	if (str)
+		free(str);
 }
 
 int main (int argc, char **argv, char **envp)
 {
-    int i;
-    //char *user;
-    //char *shell;
-    //char *mini;
-    char **mini_env;
+	//int		i;
+	//char	**path;
+	char	**mini_env;
 
-    i = 0;
-    (void)argc;
-    (void)argv;
-    mini_env = ft_dblstrdup(envp);
-    //ft_program(mini_env);
-    //user = ft_strjoin(ft_getenvval(mini_env, "USER="), "@");
-    //shell = ft_strjoin(ft_getenvval(mini_env, "_=./"), " $");
-    //mini = ft_strjoin(user, shell);
-    //printf("\033[0;92m%s\033[0;39m\n", mini);
-    //free(user);
-    //free(shell);
-    ft_free(mini_env);
-    return (0);
+	//i = 0;
+	(void)argc;
+	(void)argv;
+	mini_env = ft_str2ddup(envp);
+	//path = ft_split(ft_getenvval(mini_env, "PATH="), ':');
+	//while(path[i])
+	//{
+	//	printf("[i, path_value][%d, %s]\n", i, path[i]);
+	//	i++;
+	//}
+    while (TRUE)
+		ft_program(mini_env);
+	ft_free2dstr(mini_env);
+	return (0);
 }

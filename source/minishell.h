@@ -13,28 +13,20 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <signal.h>
-#include <stdbool.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 
+# define TRUE 1
+# define FALSE 0
 // Utils
 // Utils - str
-int     ft_strlen(const char *str);
-int     ft_dblstrlen(char **str);
-char    *ft_strdup(char *str);
-char    **ft_dblstrdup(char **str);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
-char	*ft_strjoin(char const *s1, char const *s2);
-int	    ft_char_exists(char c, char const *set);
-char	*ft_strtrim(char const *s1, char const *set);
 
 // Utils - malloc
-void    ft_free(char **str);
 
 // Signals
 void	rl_replace_line(const char *text, int clear_undo);
