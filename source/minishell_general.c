@@ -80,30 +80,30 @@ int	check_redirection1(char **red)
 	return (0);
 }
 
-int	general_function(char *str, t_data **data, char **env2)
+int	general_function(char *str, char **env)
 {
 	char	*aux;
 	char	**tokens;
 	int		status;
 
 	status = 0;
-	aux = expansor(str, env2);
-	tokens = fill_tokens(aux, ft_strlen(aux));
-	if (tokens == 0)
-		return (-1);
-	status = check_pipe(tokens);
-	if (status)
-		return (status);
+	aux = expansor(str, env);
+	//tokens = fill_tokens(aux, ft_strlen(aux));
+	//if (tokens == 0)
+	//	return (-1);
+	//status = check_pipe(tokens);
+	//if (status)
+	//	return (status);
 	free(aux);
-	*data = redirection(tokens);
-	*data = commands(tokens, *data);
-	status = check_redirection1((*data)->redirection);
-	if (status)
-	{
-		free_d_array(tokens);
-		return (status);
-	}
-	free_d_array(tokens);
-	fill_cmd_path(*data, env2);
+	//*data = redirection(tokens);
+	//*data = commands(tokens, *data);
+	//status = check_redirection1((*data)->redirection);
+	//if (status)
+	//{
+	//	free_d_array(tokens);
+	//	return (status);
+	//}
+	//free_d_array(tokens);
+	//fill_cmd_path(*data, env);
 	return (0);
 }

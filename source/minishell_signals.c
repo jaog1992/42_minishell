@@ -19,24 +19,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+//readline replace line.
 void	rl_replace_line(const char *text, int clear_undo);
 
+// rl_redisplay() displays a new line
 void	signal_handler(int num)
 {
 	(void)num;
 	if (rl_on_new_line() == -1)
-	{
-		printf("ctrl+d?\n");
 		exit(-1);
-
-	}
 	write(1, "\n", 1);
 	rl_replace_line("", 1);
 	rl_redisplay();
 }
 
 // SIGINT desencadenada cuando se pulsa CTRl+C para matar un proceso
-// SIGQUIT esta pendiente de si se pulsa CTRL-\ y es ¿ignorada?
+// SIGQUIT esta pendiente de si se pulsa CTRL-\ y es ignorada
 void	ft_signals(void)
 {
 	signal(SIGINT, signal_handler);
