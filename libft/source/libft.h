@@ -6,7 +6,7 @@
 /*   By: jde-orma <jde-orma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 06:55:18 by jde-orma          #+#    #+#             */
-/*   Updated: 2024/06/22 15:37:06 by jde-orma         ###   ########.fr       */
+/*   Updated: 2024/06/26 03:56:03 by jde-orma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ char	*ft_gnlstrjoin(char *s1, char *s2);
 char	*ft_str(char *s1, char *s2, char *str);
 int		ft_str2dlen(char **str);
 char	**ft_str2ddup(char **str);
+void	ft_2dstrncpy(char **source, char **dest, int x);
 
 //  FT_TO
 char	*ft_itoa(int n);

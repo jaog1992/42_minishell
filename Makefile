@@ -19,7 +19,9 @@ OBJ_DIR     = source/
 BIN_DIR     = ./
 
 # Source files
-SRC_FILE    = minishell_main.c minishell_signals.c minishell_exit.c minishell_var_expansion.c minishell_tokens.c
+SRC_FILE	= minishell_main.c minishell_signals.c minishell_exit.c \
+				minishell_var_expansion.c minishell_tokens.c \
+				minishell_general.c
 SRC         = $(addprefix $(SRC_DIR), $(SRC_FILE))
 OBJ_FILE    = $(SRC_FILE:.c=.o)
 OBJ         = $(addprefix $(OBJ_DIR), $(OBJ_FILE))
@@ -44,7 +46,7 @@ $(CODE_BIN): $(LIBFT) $(OBJ)
 
 $(LIBFT):
 	@if [ "$(LIBFT_BUILT)" = "no" ]; then \
-		make -C $(LIBFT_DIR); \
+		make -C $(LIBFT_DIR) --no-print-directory; \
 		LIBFT_BUILT=yes; \
 	fi
 
@@ -54,12 +56,12 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 clean:
 	@$(RM) $(OBJ)
 	@echo "$(GREEN)✔ $(BLUE)$(USER_NAME)'s $(NAME) .o files removal$(DEF_COLOR)"
-	@make -C $(LIBFT_DIR) fclean
+	@make -C $(LIBFT_DIR) fclean --no-print-directory
 
-fclean: clean
-	@$(RM) $(CODE_BIN)
-	@echo "$(GREEN)✔ $(BLUE)$(USER_NAME)'s $(NAME) executable file removal$(DEF_COLOR)"
-	@make -C $(LIBFT_DIR) fclean
+fclean:
+	@$(RM) $(CODE_BIN) $(OBJ)
+	@echo "$(GREEN)✔ $(BLUE)$(USER_NAME)'s $(NAME) executable file and .o files removal$(DEF_COLOR)"
+	@make -C $(LIBFT_DIR) fclean --no-print-directory
 
 re: fclean all
 

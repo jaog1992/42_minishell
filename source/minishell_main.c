@@ -15,25 +15,24 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-//
-//int	ft_status(char *str)
-//{
-//	if (g_status == 32512)
-//		g_status = 127;
-//	if (g_status == 512)
-//		g_status = 0;
-//	if (g_status == 256)
-//		g_status = 1;
-//	if (ft_strncmp(str, "$?", 2) == 0 && ft_strlen(str) == 2)
-//	{
-//		printf("%d: command not found\n", g_status);
-//		add_history(str);
-//		free(str);
-//		g_status = 127;
-//		return (0);
-//	}
-//	return (1);
-//}
+int	ft_status(char *str, t_minishell minishell)
+{
+	if (minishell->status == 32512)
+		minishell->status = 127;
+	if (minishell->status == 512)
+		minishell->status = 0;
+	if (minishell->status == 256)
+		minishell->status = 1;
+	if (ft_strncmp(str, "$?", 2) == 0 && ft_strlen(str) == 2)
+	{
+		printf("%d: command not found\n", minishell->status);
+		add_history(str);
+		free(str);
+		minishell->status = 127;
+		return (0);
+	}
+	return (1);
+}
 
 void print_history(void)
 {
@@ -41,7 +40,6 @@ void print_history(void)
 
     i = 0;
     HIST_ENTRY **mylist = history_list ();
-
     if (!mylist) {
         printf("No history available.\n");
         return;
@@ -86,7 +84,7 @@ char *ft_getenvval(char** env, char *str)
 }
 
 // readline returns NULL if CTRL+D
-char	*get_str(char **env)
+char	*ft_get_user_input(char **env)
 {
 	char	*aux;
 	char	*str;
@@ -94,8 +92,7 @@ char	*get_str(char **env)
 	aux = ft_strjoin(ft_getenvval(env, "USER"), "@minishell ");
     aux = ft_strjoin(ft_strjoin(RED, aux), BLUE);
 	aux = ft_strjoin(aux, ft_getenvval(env, "PWD"));
-    aux = ft_strjoin(aux, DEF_COLOR);
-    aux = ft_strjoin(aux, " $ ");
+    aux = ft_strjoin(ft_strjoin(aux, DEF_COLOR), " $ ");
     str = readline(aux);
 	if (!str)
 	{
@@ -116,38 +113,44 @@ char	*get_str(char **env)
 	return (aux);
 }
 
-int ft_status(char *str)
-{
-    if(!str)
-        return (0);
-    return (1);
-}
-
-int	general_function(char *str, t_minishell *minishell)
+int	ft_general_function(char *str, t_minishell *minishell)
 {
 	char	*aux;
+	//int		i;
 	//char	**tokens;
 	//int		status;
 
 	//status = 0;
+	//i = 0;
 	aux = ft_variable_expansion_check(str, minishell);
-    printf("The aux string is [%s]\n", aux);
-	minishell->tokens = fill_tokens(aux, ft_strlen(aux));
-	//if (minishell->tokens == 0)
-	//	return (-1);
+    printf("The aux string is [%s][len][%ld]\n", aux, ft_strlen(aux));
+	minishell->tokens = ft_get_tokens(aux, minishell);
+	if (minishell->tokens == NULL)
+	{
+		printf("error. check input\n");
+		return (0);
+	}
+	//while (minishell->tokens[i] && minishell->tokens != NULL)
+	//{
+	//	printf("[%d token][%s]\n", i, minishell->tokens[i]);
+	//	i++;
+	//}
+
+	if (minishell->tokens == 0)
+		return (-1);
 	//status = check_pipe(minishell->tokens);
 	//if (status)
 	//	return (status);
-	free(aux);
+	//free(aux);
 	//*data = redirection(minishell->tokens);
 	//*data = commands(minishell->tokens, *data);
 	//status = check_redirection1((*data)->redirection);
 	//if (status)
 	//{
-	//	free_d_array(minishell->tokens);
+	//	ft_free2dstr(minishell->tokens);
 	//	return (status);
 	//}
-	//free_d_array(minishell->tokens);
+	//ft_free2dstr(minishell->tokens);
 	//fill_cmd_path(*data, env);
 	return (0);
 }
@@ -162,27 +165,27 @@ void	ft_program(t_minishell *minishell)
     //(void)tokens;
     //(void)data;
 	ft_signals();
-    str = get_str(minishell->env);
+    str = ft_get_user_input(minishell->env);
 	if (str && *str != '\0')
 	{
 		ft_exit(str);
 		if (str && *str != '\0' && ft_status(str))
 		{
 			add_history(str);
-			ret = general_function(str, minishell);
+			ret = ft_general_function(str, minishell);
 			if (ret > 0)
-				minishell->g_status = ret;
+				minishell->status = ret;
 	//		if (!ret)
 	//			ft_exec(*data, env);
 	//		if (*data)
 	//			ft_lstclear1(data);
 		}
-	//	if (*tokens)
-	//		free_d_array(*tokens);
+		if (minishell->tokens)
+			ft_free2dstr(minishell->tokens);
 	//}
-	//if (str)
-	//	free(str);
-    //print_history();
+	if (str)
+		free(str);
+    print_history();
     }
 }
 
@@ -196,7 +199,7 @@ t_minishell *init_minishell(char **envp)
 		ft_print_error("Memory allocation for minishell data type failed\n");
 		return (minishell);
 	}
-	minishell->g_status = 0;
+	minishell->status = 0;
 	minishell->tokens = NULL;
 	minishell->env = ft_str2ddup(envp);
     return (minishell);
@@ -205,13 +208,13 @@ t_minishell *init_minishell(char **envp)
 int main (int argc, char **argv, char **envp)
 {
     //t_data      *data;
-	t_minishell	    *minishell;
+	t_minishell	*minishell;
 
 	(void)argc;
 	(void)argv;
     minishell = init_minishell(envp);
     //data = NULL;
-    while (TRUE)
+	while (TRUE)
 		ft_program(minishell);
 	//ft_free2dstr(minishell->env);
 	return (0);

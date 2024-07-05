@@ -58,7 +58,7 @@ FT_STR		=	ft_split.c ft_strchr.c ft_strdup.c ft_striteri.c ft_strjoin.c \
 				ft_strlcat.c ft_strlcpy.c ft_strlen.c ft_strmapi.c ft_strtol.c\
 				ft_strncmp.c ft_strnstr.c ft_strrchr.c ft_strtrim.c ft_substr.c\
 				ft_get_next_line.c ft_gnlstrjoin.c ft_str.c ft_strncpy.c \
-				ft_str2ddup.c ft_str2dlen.c
+				ft_str2ddup.c ft_str2dlen.c ft_2dstrncpy.c
 FT_TO		=	ft_atoi.c ft_itoa.c ft_uitoa.c ft_toupper.c ft_tolower.c
 
 # Source files

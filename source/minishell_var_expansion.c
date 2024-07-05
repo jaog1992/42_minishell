@@ -29,7 +29,7 @@ int	dollar_var_len(char *str)
 	return (x);
 }
 
-int	count_char_index(char *str, char a)
+int	ft_next_same_char_pos(char *str, char a)
 {
 	int	x;
 
@@ -88,7 +88,7 @@ char	*check_var(char *var, char *one, char *second, t_minishell *mshell)
 	}
 	else if (ft_strncmp("?", var, INT64_MAX) == 0)
 	{
-		var = ft_itoa(mshell->g_status);
+		var = ft_itoa(mshell->status);
 		second = ft_strjoin(one, var);
 		free(var);
 		free(one);
@@ -98,7 +98,7 @@ char	*check_var(char *var, char *one, char *second, t_minishell *mshell)
 	return (second);
 }
 
-int	ft_variable_expansion(char **str, int x, t_minishell *mshell)
+int	ft_variable_expansion(char **str, int x, t_minishell *minishell)
 {
 	char	*var;
 	char	*first_part;
@@ -108,7 +108,7 @@ int	ft_variable_expansion(char **str, int x, t_minishell *mshell)
 	var = dollar_variable((*str + x));
 	first_part = ft_substr(*str, 0, x);
 	second_part = NULL;
-	second_part = check_var(var, first_part, second_part, mshell);
+	second_part = check_var(var, first_part, second_part, minishell);
 	aux = *str + x + 1 + ft_strlen(var);
 	first_part = ft_strjoin(second_part, aux);
 	free(second_part);
@@ -118,13 +118,14 @@ int	ft_variable_expansion(char **str, int x, t_minishell *mshell)
 	return (-1);
 }
 
-int	closing_char_exists(char *str, char c)
+int	ft_closing_char(char *str, char c)
 {
 	int i;
     
-    i = 0;
+    i = 1;
 	while (str[i])
 	{
+		//ft_printf("string char and == char[%d][%c][%c]\n", i, str[i], c);
 		if (str[i] == c)
 			return (i);
 		i++;
@@ -142,18 +143,18 @@ int	check_next_char(char c)
 
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell)
 {
-	int	x;
 	int	i;
+	int	x;
 
 	i = -1;
 	x = 0;
 	while (str[x])
 	{
-		if (str[x] == '"' && closing_char_exists(&str[x + 1], str[x]) && x > i)
+		if (str[x] == '"' && ft_closing_char(&str[x + 1], str[x]) && x > i)
 			i = find_pos(str, x);
-		else if (str[x] == '\'' && closing_char_exists(&str[x + 1], str[x])
+		else if (str[x] == '\'' && ft_closing_char(&str[x + 1], str[x])
 			&& x >= i)
-			x += count_char_index(str + x, str[x]);
+			x += ft_next_same_char_pos(str + x, str[x]);
 		if (str[x] == '$' && (str[x + 1] && str[x + 1] != '"')
 			&& !check_next_char(str[x + 1]))
 		{
