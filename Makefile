@@ -1,5 +1,5 @@
 # Coder Alias
-USER_NAME   = jde-orma
+USER_NAME   = "nkrasimi/jde-orma"
 
 # Compiler and flags
 CC          = gcc
@@ -21,7 +21,7 @@ BIN_DIR     = ./
 # Source files
 SRC_FILE	= minishell_main.c minishell_signals.c minishell_exit.c \
 				minishell_var_expansion.c minishell_tokens.c \
-				minishell_general.c
+				minishell_utils.c
 SRC         = $(addprefix $(SRC_DIR), $(SRC_FILE))
 OBJ_FILE    = $(SRC_FILE:.c=.o)
 OBJ         = $(addprefix $(OBJ_DIR), $(OBJ_FILE))

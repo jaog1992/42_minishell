@@ -15,7 +15,7 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-int	ft_status(char *str, t_minishell minishell)
+int	ft_status(char *str, t_minishell *minishell)
 {
 	if (minishell->status == 32512)
 		minishell->status = 127;
@@ -26,6 +26,8 @@ int	ft_status(char *str, t_minishell minishell)
 	if (ft_strncmp(str, "$?", 2) == 0 && ft_strlen(str) == 2)
 	{
 		printf("%d: command not found\n", minishell->status);
+		//Necesito este add_history
+
 		add_history(str);
 		free(str);
 		minishell->status = 127;
@@ -49,6 +51,60 @@ void print_history(void)
         printf("%d: %s\n", i + 1, mylist[i]->line);
         i++;
     }
+}
+
+void	ft_env(char *str, t_minishell *minishell)
+{
+	int	i;
+	
+	i = 0;
+	if (ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)
+	{
+		while (minishell->env[i])
+		{
+			printf("%s\n", minishell->env[i]);
+			i++;
+		}
+	}
+}
+
+
+void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
+{
+    int     i;
+    char    **str2ddup;
+
+    len = ft_str2dlen(minishell->env) + len;
+	printf("Former env var num was %d, current is %d\n", ft_str2dlen(minishell->env), len);
+	printf("The new var is [%s]\n", str);
+    str2ddup = (char**)malloc(sizeof(char*) * (len + 1));
+    str2ddup[len--] = NULL;
+    i = len;
+    if (ft_str2dlen(minishell->env) == len)
+	{
+        str2ddup[i] = ft_strdup(str);
+		printf("copiamos la nueva variable: %s\n", str2ddup[i]);
+	}
+    i--;
+    while(len >= 0)
+    {
+        str2ddup[i] = ft_strdup(minishell->env[len]);
+        len--;
+        i--;
+    }
+	printf("última variable vieja de env [%s]\n", minishell->env[ft_str2dlen(minishell->env) - 1]);
+    ft_free2dstr(minishell->env);
+	if (minishell->env == NULL)
+		printf("Free correcto\n");
+    minishell->env = ft_str2ddup(str2ddup);
+	printf("última variable nueva de env [%s]\n", minishell->env[ft_str2dlen(minishell->env) - 1]);
+
+}
+
+void	ft_export(char *str, t_minishell *minishell)
+{
+	if (ft_strncmp(str, "export ", 7) == 0 && ft_strlen(str) >= 8)
+		ft_str2ddupenv(minishell, str + 7, 1);
 }
 
 char *ft_getenvval(char** env, char *str)
@@ -83,16 +139,16 @@ char *ft_getenvval(char** env, char *str)
     return (str2);
 }
 
-// readline returns NULL if CTRL+D
+// readline returns NULL if CTRL+D as CTRL+D == EOF
+// aux = ft_strjoin(aux, ft_getenvval(env, "PWD"));
+// aux = ft_strjoin(ft_strjoin(aux, DEF_COLOR), " $ ");
 char	*ft_get_user_input(char **env)
 {
 	char	*aux;
 	char	*str;
 
-	aux = ft_strjoin(ft_getenvval(env, "USER"), "@minishell ");
-    aux = ft_strjoin(ft_strjoin(RED, aux), BLUE);
-	aux = ft_strjoin(aux, ft_getenvval(env, "PWD"));
-    aux = ft_strjoin(ft_strjoin(aux, DEF_COLOR), " $ ");
+	aux = ft_strjoin(ft_getenvval(env, "USER"), "@minishell $ ");
+    aux = ft_strjoin(ft_strjoin(RED, aux), DEF_COLOR);
     str = readline(aux);
 	if (!str)
 	{
@@ -117,10 +173,9 @@ int	ft_general_function(char *str, t_minishell *minishell)
 {
 	char	*aux;
 	//int		i;
-	//char	**tokens;
 	//int		status;
 
-	//status = 0;
+	minishell->status = 0;
 	//i = 0;
 	aux = ft_variable_expansion_check(str, minishell);
     printf("The aux string is [%s][len][%ld]\n", aux, ft_strlen(aux));
@@ -138,9 +193,9 @@ int	ft_general_function(char *str, t_minishell *minishell)
 
 	if (minishell->tokens == 0)
 		return (-1);
-	//status = check_pipe(minishell->tokens);
-	//if (status)
-	//	return (status);
+	minishell->status = check_pipe(minishell->tokens);
+	if (minishell->status)
+		return (minishell->status);
 	//free(aux);
 	//*data = redirection(minishell->tokens);
 	//*data = commands(minishell->tokens, *data);
@@ -155,6 +210,12 @@ int	ft_general_function(char *str, t_minishell *minishell)
 	return (0);
 }
 
+void ft_builtin(char *str, t_minishell *minishell)
+{
+	ft_exit(str);
+	ft_env(str, minishell);
+	ft_export(str, minishell);
+}
 
 //void	ft_program(char **env)
 void	ft_program(t_minishell *minishell)
@@ -168,8 +229,8 @@ void	ft_program(t_minishell *minishell)
     str = ft_get_user_input(minishell->env);
 	if (str && *str != '\0')
 	{
-		ft_exit(str);
-		if (str && *str != '\0' && ft_status(str))
+		ft_builtin(str, minishell);
+		if (str && *str != '\0' && ft_status(str, minishell))
 		{
 			add_history(str);
 			ret = ft_general_function(str, minishell);

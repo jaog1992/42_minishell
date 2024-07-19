@@ -104,6 +104,7 @@ int		ft_count_tokens(char *str);
 void	ft_lstclear1(t_data **lst);
 int		check_redirection1(char **ptr);
 int		ft_general_function(char *str, t_minishell *minishell);
+int		check_pipe(char **tokens);
 // Command execution
 
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
