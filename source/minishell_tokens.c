@@ -16,19 +16,46 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
+extern int	g_status;
+
 int	ft_count_index(char *str)
 {
-	int		i;
-	int		x;
+	// int		i;
+	// int		j;
 
-	i = 0;
+	// i = 0;
+	// j = 0;
+	// while (str[i])
+	// {
+	// 	if (str[i] == '"' || str[i] == '\'')
+	// 	{
+	// 		j += ft_next_same_char_pos(&str[i], str[i]);
+	// 		i += j + 1;
+	// 	}
+	// 	else
+	// 	{
+	// 		i++;
+	// 		j++;
+	// 	}
+	// }
+	// printf("the value of count index is [%d]\n", j);
+	// return (j);
+	int		x;
+	int		i;
+	int		q;
+	char	*aux;
+
+	q = 0;
 	x = 0;
+	i = 0;
 	while (str[x])
 	{
 		if (str[x] == '"' || str[x] == '\'')
 		{
-			i += ft_next_same_char_pos(&str[x], str[x]);
-			x += i + 1;
+			aux = (str + x);
+			q = ft_closing_char(aux, str[x], -1);
+			i += q;
+			x += q + 1;
 		}
 		else
 		{
@@ -38,8 +65,8 @@ int	ft_count_index(char *str)
 	}
 	return (i);
 }
-//repasar
-void	fill_array(char *source, char *dest)
+
+void	replace_string(char *source, char *dest)
 {
 	int	x;
 	int	check;
@@ -52,7 +79,7 @@ void	fill_array(char *source, char *dest)
 		{
 			if (check == 0)
 			{
-				x = ft_next_same_char_pos(source, *source) - 1;
+				x = ft_closing_char(source, *source, -1) - 1;
 				check = 1;
 			}
 			else
@@ -62,63 +89,67 @@ void	fill_array(char *source, char *dest)
 			}
 			source++;
 		}
-		ft_2dstrncpy(&dest, &source, x);
+		if (check == 1)
+		{
+			ft_strncpy(dest, source, x);
+			return ;
+		}
 	}
 }
 
 int	ft_isquotes(char *str)
 {
-	int	x;
+	int	i;
 
-	x = 0;
-	while (str[x])
+	i = 0;
+	while (str[i])
 	{
-		if (str[x] == '\'' || str[x] == '"')
+		if (str[i] == '\'' || str[i] == '"')
 			return (0);
-		x++;
+		i++;
 	}
 	return (1);
 }
 
 char	*erase_quotes(char *str)
 {
-	int		x;
-	char	*array;
+	int		i;
+	char	*new_str;
 
 	if (ft_isquotes(str))
 		return (str);
-	x = ft_count_index(str);
-	if (x == 0 || x == -1)
+	i = ft_count_index(str);
+	if (i == 0 || i == -1)
 		return (str);
 	else
 	{
-		array = (char *)ft_calloc(x, sizeof(char));
-		array[x - 1] = '\0';
-		fill_array(str, array);
+		new_str = (char *)ft_calloc(i, sizeof(char));
+		new_str[i - 1] = '\0';
+		replace_string(str, new_str);
 	}
-	return (array);
+	return (new_str);
 }
 
-int	check_assign(int check, char a, char **quote, char *c)
+int	check_assign(int check, char a, char **quoted_str, char *c)
 {
-	if (a != **quote && check == 0)
+	if (a != **quoted_str && check == 0)
 	{
 		check = 1;
-		*c = **quote;
-		(*quote)++;
+		*c = **quoted_str;
+		(*quoted_str)++;
 	}
-	else if (a != **quote && check == 1)
+	else if (a != **quoted_str && check == 1)
 	{
 		check = 0;
-		(*quote)++;
+		(*quoted_str)++;
 	}
 	return (check);
 }
 
-void	count_assign(char **aux, char **quote, int *x, char a)
+void	count_assign(char **aux, char **quoted_str, int *x, char a)
 {
 	**aux = a;
-	(*quote)++;
+	(*quoted_str)++;
 	(*aux)++;
 	(*x)++;
 }
@@ -130,72 +161,60 @@ int	ft_isdupchar(char *str)
 	return (1);
 }
 
-int	ft_word_length(char *str)
-{
-	//printf("The char being aztertu is [%c] and the string is [%s]\n", *str, str);
-	//printf("The strign with index is [%s]\n", &str[0]);
-	if (!ft_closing_char(str, *str))
-	{
-		return (-1);
-	}
-	return (ft_next_same_char_pos(str, *str));
-}
-
 int	ft_count_words(char *str)
 {
 	int	i;
-	int	x;
+	int	len;
 
 	i = 0;
-	x = 0;
-	//printf("ft_count_words start\n");
-	while (str[x])
+	len = 0;
+	while (str[i])
 	{
-		if ((str[x] == '"' || str[x] == '\''))
+		if ((str[i] == '"' || str[i] == '\''))
 		{
-			i = ft_word_length(&str[x]);
-			if (i == -1)
-			{
-	//			printf("ft_count_words -1\n");
+			len = ft_closing_char(str, str[i], -1);
+			if (len == -1)
 				return (-1);
-			}
-			x += i + 1;
+			i += len + 1;
 		}
-		else if (str[x] == '|' || str[x] == '<' || str[x] == '>' || str[x] == ' ')
-			return (x);
+		else if (str[i] == '|' || str[i] == '<' || str[i] == '>' \
+				 || str[i] == ' ')
+			return (i);
 		else
-			x++;
+			i++;
 	}
-	//printf("ft_count_words end\n");
-	return (x);
+	return (i);
 }
 
-void	fill_array1(char *str, char **tokens)
+void	fill_tokens(char *str, char **tokens)
 {
 	int	i;
-	int	x;
+	int j;
+	int	index_step;
 
 	i = 0;
-	x = 0;
-	while (str[x])
+	j = 0;
+	while (str[i])
 	{
-		if (str[x] == '|' || str[x] == '<' || str[x] == '>')
-			i = ft_isdupchar(&str[x]);
-		else if (str[x] != ' ')
-			i = ft_count_words(&str[x]);
-		if (str[x] != ' ')
+		if (str[i] == '|' || str[i] == '<' || str[i] == '>')
+			index_step = ft_isdupchar(&str[i]);
+		else if (str[i] != ' ')
+			index_step = ft_count_words(&str[i]);
+		if (str[i] != ' ')
 		{
-			*tokens = ft_substr(&str[x], 0, i);
-			tokens[1] = ft_strdup(*tokens);
-			ft_memset(tokens[1], '0', ft_strlen(tokens[1]));
-			x += i - 1;
-			tokens += 2;
+			tokens[j] = ft_substr(&str[i], 0, index_step);
+			tokens[j + 1] = ft_strdup(*tokens);
+			ft_memset(tokens[j + 1], '0', ft_strlen(tokens[j + 1]));
+			i += index_step - 1;
+			j += 2;
 		}
-		x++;
+		i++;
 	}
+	erase_tokens_quotes(tokens);
 }
 
-void	fill_map(char *quote, char *no, char **fill)
+//REVISAR
+void	fill_map(char *quoted_str, char *unquoted_str, char **fill)
 {
 	int		check;
 	char	*aux;
@@ -205,104 +224,94 @@ void	fill_map(char *quote, char *no, char **fill)
 	x = 0;
 	check = 0;
 	aux = *fill;
-	while (no[x])
+	while (unquoted_str[x])
 	{
-		check = check_assign(check, no[x], &quote, &c);
+		check = check_assign(check, unquoted_str[x], &quoted_str, &c);
 		if (check == 1)
 		{
-			while (*quote != c && no[x])
+			while (*quoted_str != c && unquoted_str[x])
 			{
-				count_assign(&aux, &quote, &x, '1');
+				count_assign(&aux, &quoted_str, &x, '1');
 			}
-			quote++;
+			quoted_str++;
 			check = 0;
 		}
 		else if (check == 0)
-			count_assign(&aux, &quote, &x, '1');
+			count_assign(&aux, &quoted_str, &x, '1');
 	}
 }
 
-void	fill_array2(char **tokens)
+void	erase_tokens_quotes(char **tokens)
 {
-	int		x;
+	int		i;
 	char	*aux1;
 	char	*aux2;
 	char	*aux3;
 
-	x = 0;
-	while (tokens[x])
+	i = 0;
+	while (tokens[i])
 	{
-		aux1 = erase_quotes(tokens[x]);
-		if (ft_strncmp(tokens[x], aux1, __INT_MAX__) != 0)
+		aux1 = erase_quotes(tokens[i]);
+		if (ft_strncmp(tokens[i], aux1, __INT_MAX__) != 0)
 		{
-			aux2 = tokens[x];
-			aux3 = tokens[x + 1];
-			tokens[x] = ft_strdup(aux1);
-			tokens[x + 1] = ft_strdup(aux1);
-			fill_map(aux2, tokens[x], &tokens[x + 1]);
+			aux2 = tokens[i];
+			aux3 = tokens[i + 1];
+			tokens[i] = ft_strdup(aux1);
+			tokens[i + 1] = ft_strdup(aux1);
+			printf("tokens[%d][%d]\n", i, i + 1);
+			fill_map(aux2, tokens[i], &tokens[i + 1]);
 			free(aux3);
 			free(aux2);
 			free(aux1);
 		}
-		x += 2;
+		i += 2;
 	}
 }
 
-//diferencia entre str && *str
-// esta contando los espacios como tokens, pero debería hacerlo con las " tambien. da error
 int	ft_count_tokens(char *str)
 {
-	int x;
 	int	i;
+	int j;
 	int	num_token;
 
-	x = 0;
 	i = 0;
+	j = 0;
 	num_token = 0;
-	//printf("ft_count_tokens start\n");
-	while (str[x])
+	while (str[i])
 	{
-		if (str[x] == '|' || str[x] == '<' || str[x] == '>')
+		if (str[i] == '|' || str[i] == '<' || str[i] == '>')
 			num_token++;
-		else if (str[x] != ' ')
+		else if (str[i] != ' ')
 		{
-			i = ft_count_words(&str[x]);
-			if (i < 0)
+			j = ft_count_words(&str[i]);
+			if (j < 0)
 				return (-1);
-			x += i - 1;
+			i += j - 1;
 			num_token++;
 		}
-		x++;
+		i++;
 	}
-	//printf("exit ft_count_tokens\n");
 	return (num_token);
 }
 
 char	**ft_get_tokens(char *str, t_minishell *minishell)
 {
-	int		x;
+	int		i;
 
-	//printf("ft_get_tokens start\n");
-	x = ft_count_tokens(str);
-	if (x == -1)
-	{
-		//printf("return -1\n");
-		//free (str);
+	i = ft_count_tokens(str);
+	if (i == -1)
 		return (NULL);
-	}
-	//printf("[token count][%d]\n", x);
-	minishell->tokens = (char **)ft_calloc(((x * 2) + 1), sizeof(char *));
-	minishell->tokens[x * 2] = 0;
+	printf("[token count][%d]\n", i);
+	minishell->tokens = (char **)ft_calloc(((i * 2) + 1), sizeof(char *));
+	minishell->tokens[i * 2] = 0;
 	if (!minishell->tokens)
 		return (NULL);
-	fill_array1(str, minishell->tokens);
-	x = 0;
-	//[borrar]
-	while (minishell->tokens[x])
+	fill_tokens(str, minishell->tokens);
+	i = 0;
+	while (minishell->tokens[i])
 	{
-		printf("[%d token bf fill_array 2][%s]\n", x, minishell->tokens[x]);
-		x++;
+		printf("[%d token bf fill_array 2][%s]\n", i, minishell->tokens[i]);
+		i++;
 	}
-	fill_array2(minishell->tokens);
 	return (minishell->tokens);
 }

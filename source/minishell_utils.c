@@ -13,6 +13,7 @@
 #include "minishell.h"
 #include "../libft/source/libft.h"
 
+extern int	g_status;
 
 int	check_pipe(char **tokens)
 {

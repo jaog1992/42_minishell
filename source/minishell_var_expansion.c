@@ -29,18 +29,18 @@ int	dollar_var_len(char *str)
 	return (x);
 }
 
-int	ft_next_same_char_pos(char *str, char a)
+int	ft_closing_char(char *str, char c, int ret)
 {
-	int	x;
-
-	x = 1;
-	while (str[x])
+	int i;
+    
+    i = 1;
+	while (str[i])
 	{
-		if (str[x] == a)
-			return (x);
-		x++;
+		if (str[i] == c)
+			return (i);
+		i++;
 	}
-	return (-1);
+	return (ret);
 }
 
 char	*dollar_variable(char *str)
@@ -118,21 +118,6 @@ int	ft_variable_expansion(char **str, int x, t_minishell *minishell)
 	return (-1);
 }
 
-int	ft_closing_char(char *str, char c)
-{
-	int i;
-    
-    i = 1;
-	while (str[i])
-	{
-		//ft_printf("string char and == char[%d][%c][%c]\n", i, str[i], c);
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	return (0);
-}
-
 int	check_next_char(char c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a'
@@ -144,24 +129,24 @@ int	check_next_char(char c)
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell)
 {
 	int	i;
-	int	x;
+	int	pos;
 
-	i = -1;
-	x = 0;
-	while (str[x])
+	i = 0;
+	pos = -1;
+	while (str[i])
 	{
-		if (str[x] == '"' && ft_closing_char(&str[x + 1], str[x]) && x > i)
-			i = find_pos(str, x);
-		else if (str[x] == '\'' && ft_closing_char(&str[x + 1], str[x])
-			&& x >= i)
-			x += ft_next_same_char_pos(str + x, str[x]);
-		if (str[x] == '$' && (str[x + 1] && str[x + 1] != '"')
-			&& !check_next_char(str[x + 1]))
+		if (str[i] == '"' && ft_closing_char(&str[i + 1], str[i], 0) && i > pos)
+			pos = find_pos(str, i);
+		else if (str[i] == '\'' && ft_closing_char(&str[i + 1], str[i], 0)
+			&& i >= pos)
+			i += ft_closing_char(str + i, str[i], -1);
+		if (str[i] == '$' && (str[i + 1] && str[i + 1] != '"')
+			&& !check_next_char(str[i + 1]))
 		{
-			x = ft_variable_expansion(&str, x, minishell);
-			i = -1;
+			i = ft_variable_expansion(&str, i, minishell);
+			pos = -1;
 		}
-		x++;
+		i++;
 	}
 	return (str);
 }

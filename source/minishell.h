@@ -28,6 +28,11 @@
 # define GREEN "\001\e[0;92m\002"
 # define BLUE  "\001\e[0;94m\002"
 # define DEF_COLOR "\001\e[0;39m\002"
+# define CMD_NOT_FOUND 127
+# define CMD_SUCCESS 0
+# define CMD_GENERIC_ERROR 1
+
+extern int g_status;
 
 typedef struct s_data
 {
@@ -77,12 +82,11 @@ int		ft_exit(char *str);
 char	*ft_getenvval(char** env, char *str);
 // Expansor functions. They expand env variable values
 int		dollar_var_len(char *str);
-int		ft_next_same_char_pos(char *str, char a);
 char	*dollar_variable(char *str);
 int		find_pos(char *str, int x);
 char	*check_var(char *var, char *one, char *second, t_minishell *mshell);
 int		ft_variable_expansion(char **str, int x, t_minishell *mshell);
-int		ft_closing_char(char *str, char c);
+int		ft_closing_char(char *str, char c, int ret);
 int		check_next_char(char c);
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell);
 
@@ -91,11 +95,11 @@ char	*ft_variable_expansion_check(char *str, t_minishell *minishell);
 int		check_assign(int check, char a, char **quote, char *c);
 void	count_assign(char **aux, char **quote, int *x, char a);
 int		ft_isdupchar(char *str);
-int		ft_word_length(char *str);
+// int		ft_word_length(char *str);
 int		ft_count_words(char *str);
-void	fill_array1(char *str, char **tokens);
+void	fill_tokens(char *str, char **tokens);
 void	fill_map(char *quote, char *no, char **fill);
-void	fill_array2(char **tokens);
+void	erase_tokens_quotes(char **tokens);
 char	**ft_get_tokens(char *str, t_minishell *minishell);
 int		ft_count_tokens(char *str);
 
