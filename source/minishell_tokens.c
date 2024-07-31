@@ -43,7 +43,7 @@ int	ft_count_index(char *str)
 			index_count++;
 		}
 	}
-	printf("ft_count_index[i][index_count][%d][%d]\n", i, index_count);
+	//printf("ft_count_index[i][index_count][%d][%d]\n", i, index_count);
 	return (index_count);
 }
 
@@ -65,7 +65,9 @@ void	ft_quotedstrncpy(char *src, char *dst)
 			i += x + 1;
 			j += x;
 		}
-		printf("ft_quoted...[i][j][%d][%d]\n", i, j);
+		else
+			ft_strncpy(&dst[j++], &src[i], 1);
+	//	printf("ft_quoted...[i][j][%d][%d]\n", i, j);
 		i++;
 	}
 }
@@ -92,9 +94,9 @@ char	*erase_quotes(char *str)
 	if (!ft_isquotes(str))
 		return (str);
 	i = 0;
-	printf("the string is %s\n", str);
+	//printf("the string is %s\n", str);
 	i = ft_count_index(&str[i]) + 1;
-	printf("the index is %d\n", i);
+	//printf("the index is %d\n", i);
 	if (i == 0 || i == -1)
 		return (str);
 	else
@@ -102,7 +104,7 @@ char	*erase_quotes(char *str)
 		new_str = (char *)ft_calloc(i, sizeof(char));
 		new_str[i - 1] = '\0';
 		ft_quotedstrncpy(str, new_str);
-		printf("[new_str][%s]\n", new_str);
+	//	printf("[new_str][%s]\n", new_str);
 	}
 	return (new_str);
 }
@@ -195,6 +197,7 @@ void	fill_tokens(char *str, char **tokens)
 		i++;
 	}
 	//printf("previo a erase_tokens_quotes. i es %d e index_step %d\n", i, index_step);
+	//printf("fill_tokens bf erase is %s\n", tokens[0]);
 	erase_tokens_quotes(tokens);
 }
 

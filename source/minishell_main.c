@@ -171,31 +171,26 @@ char	*ft_get_user_input(char **env)
 	return (aux);
 }
 
-int	ft_general_function(char *str, t_minishell *minishell)
+int	ft_general_function(char *str, t_minishell *minishell, t_data **data)
 {
 	char	*aux;
 
+	(void)data;
 	g_status = 0;
 	aux = ft_variable_expansion_check(str, minishell);
     printf("The aux string is [%s][len][%ld]\n", aux, ft_strlen(aux));
 	minishell->tokens = ft_get_tokens(aux, minishell);
 	if (minishell->tokens == NULL)
 	{
-		ft_print_error("Check input\n");
+		printf("-bash: $%s: command not found\n", str);
 		return (0);
 	}
-	//while (minishell->tokens[i] && minishell->tokens != NULL)
-	//{
-	//	printf("[%d token][%s]\n", i, minishell->tokens[i]);
-	//	i++;
-	//}
-
 	if (minishell->tokens == 0)
 		return (-1);
-	g_status = check_pipe(minishell->tokens);
+	g_status = check_invalid_pipe(minishell->tokens);
 	if (g_status)
 		return (g_status);
-	//free(aux);
+	free(aux);
 	//*data = redirection(minishell->tokens);
 	//*data = commands(minishell->tokens, *data);
 	//status = check_redirection1((*data)->redirection);
@@ -217,7 +212,7 @@ void ft_builtin(char *str, t_minishell *minishell)
 }
 
 //void	ft_program(char **env)
-void	ft_program(t_minishell *minishell)
+void	ft_program(t_minishell *minishell, t_data **data)
 {
     char *str;
     int ret;
@@ -232,20 +227,19 @@ void	ft_program(t_minishell *minishell)
 		if (str && *str != '\0' && ft_status(str))
 		{
 			add_history(str);
-			ret = ft_general_function(str, minishell);
+			ret = ft_general_function(str, minishell, data);
 			if (ret > 0)
 				g_status = ret;
 	//		if (!ret)
-	//			ft_exec(*data, env);
+	//			ft_exec(*data, minishell->env);
 	//		if (*data)
 	//			ft_lstclear1(data);
-			printf("El valor de g_status es %d\n", g_status);
 		}
-		if (minishell->tokens)
-			ft_free2dstr(minishell->tokens);
+		//if (minishell->tokens)
+		//	ft_free2dstr(minishell->tokens);
 	//}
-	if (str != NULL)
-		free(str);
+	//if (str != NULL)
+	//	free(str);
     print_history();
     }
 }
@@ -268,15 +262,15 @@ t_minishell *init_minishell(char **envp)
 
 int main (int argc, char **argv, char **envp)
 {
-    //t_data      *data;
+    t_data      **data;
 	t_minishell	*minishell;
 
 	(void)argc;
 	(void)argv;
     minishell = init_minishell(envp);
-    //data = NULL;
+    data = NULL;
 	while (TRUE)
-		ft_program(minishell);
+		ft_program(minishell, data);
 	//ft_free2dstr(minishell->env);
 	return (0);
 }

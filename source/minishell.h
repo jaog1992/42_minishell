@@ -50,7 +50,7 @@ typedef struct s_minishell
 {
 	char	**env;
     char	**tokens;
-	int		status;
+	t_data	*data;
 }			t_minishell;
 
 typedef struct s_fd
@@ -107,8 +107,8 @@ int		ft_count_tokens(char *str);
 
 void	ft_lstclear1(t_data **lst);
 int		check_redirection1(char **ptr);
-int		ft_general_function(char *str, t_minishell *minishell);
-int		check_pipe(char **tokens);
+int		ft_general_function(char *str, t_minishell *minishell, t_data **data);
+int		check_invalid_pipe(char **tokens);
 // Command execution
 
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);

@@ -15,6 +15,8 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
+extern int g_status;
+
 int	dollar_var_len(char *str)
 {
 	int	x;
@@ -22,9 +24,7 @@ int	dollar_var_len(char *str)
 	x = 0;
 	if (str[0] == '?' || str[0] == '_')
 		return (1);
-	while (str[x] && ((str[x] >= '0' && str[x] <= '9') 
-            || (str[x] >= 'A' && str[x] <= 'Z')	|| (str[x] >= 'a' && str[x] <= 'z')
-            || str[x] == '_'))
+	while (str[x] && (ft_isalnum(str[x]) || str[x] == '_'))
 		x++;
 	return (x);
 }
@@ -45,23 +45,23 @@ int	ft_closing_char(char *str, char c, int ret)
 
 char	*dollar_variable(char *str)
 {
-	char	*array;
+	char	*str2;
 	int		len;
-	int		x;
+	int		i;
 
 	len = dollar_var_len(&str[1]);
-	array = (char *)calloc((len + 1), sizeof(char));
-	ft_memset(array, 'a', len);
-	array[len] = 0;
+	str2 = (char *)calloc((len + 1), sizeof(char));
+	ft_memset(str2, 'a', len);
+	str2[len] = 0;
+	i = 1;
 	len = 0;
-	x = 1;
-	while (array[len])
+	while (str2[len])
 	{
-		array[len] = str[x];
+		str2[len] = str[i];
 		len++;
-		x++;
+		i++;
 	}
-	return (array);
+	return (str2);
 }
 
 int	find_pos(char *str, int x)
@@ -88,7 +88,7 @@ char	*check_var(char *var, char *one, char *second, t_minishell *mshell)
 	}
 	else if (ft_strncmp("?", var, INT64_MAX) == 0)
 	{
-		var = ft_itoa(mshell->status);
+		var = ft_itoa(g_status);
 		second = ft_strjoin(one, var);
 		free(var);
 		free(one);
@@ -120,12 +120,11 @@ int	ft_variable_expansion(char **str, int x, t_minishell *minishell)
 
 int	check_next_char(char c)
 {
-	if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a'
-			&& c <= 'z') || c == '_' || c == '?')
+	if (ft_isalnum(c) || c == '_' || c == '?')
 		return (0);
 	return (1);
 }
-//REVISAR
+
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell)
 {
 	int	i;

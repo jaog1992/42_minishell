@@ -15,7 +15,7 @@
 
 extern int	g_status;
 
-int	check_pipe(char **tokens)
+int	check_invalid_pipe(char **tokens)
 {
 	int	len;
 

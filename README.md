@@ -15,7 +15,7 @@
 | ✅ | Display a prompt when waiting for a new command. |
 | ✅ | Have a working history. |
 | ❌ | Search and launch the right executable (based on the PATH variable or using a relative or an absolute path). |
-| ❌ | Avoid using more than one global variable to indicate a received signal. |
+| ✅ | Avoid using more than one global variable to indicate a received signal. |
 | ✅ | Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon). |
 | ✅ | Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence. |
 | ✅ | Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign). |
@@ -43,5 +43,4 @@
 
 
 REVISAR
-* fill_map
 * double free en expansor de variables de entorno
