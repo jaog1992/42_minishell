@@ -125,7 +125,7 @@ int	check_next_char(char c)
 		return (0);
 	return (1);
 }
-
+//REVISAR
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell)
 {
 	int	i;

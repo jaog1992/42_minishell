@@ -20,80 +20,53 @@ extern int	g_status;
 
 int	ft_count_index(char *str)
 {
-	// int		i;
-	// int		j;
-
-	// i = 0;
-	// j = 0;
-	// while (str[i])
-	// {
-	// 	if (str[i] == '"' || str[i] == '\'')
-	// 	{
-	// 		j += ft_next_same_char_pos(&str[i], str[i]);
-	// 		i += j + 1;
-	// 	}
-	// 	else
-	// 	{
-	// 		i++;
-	// 		j++;
-	// 	}
-	// }
-	// printf("the value of count index is [%d]\n", j);
-	// return (j);
-	int		x;
 	int		i;
-	int		q;
+	int		index_count;
+	int		closing_char_pos;
 	char	*aux;
 
-	q = 0;
-	x = 0;
 	i = 0;
-	while (str[x])
+	index_count = 0;
+	closing_char_pos = 0;
+	while (str[i])
 	{
-		if (str[x] == '"' || str[x] == '\'')
+		if (str[i] == '"' || str[i] == '\'')
 		{
-			aux = (str + x);
-			q = ft_closing_char(aux, str[x], -1);
-			i += q;
-			x += q + 1;
+			aux = (str + i);
+			closing_char_pos = ft_closing_char(aux, str[i], -1);
+			index_count += closing_char_pos;
+			i += closing_char_pos + 1;
 		}
 		else
 		{
-			x++;
 			i++;
+			index_count++;
 		}
 	}
-	return (i);
+	printf("ft_count_index[i][index_count][%d][%d]\n", i, index_count);
+	return (index_count);
 }
 
-void	replace_string(char *source, char *dest)
+void	ft_quotedstrncpy(char *src, char *dst)
 {
 	int	x;
-	int	check;
+	int j;
+	int i;
 
-	check = 0;
-	while (*source)
+	i = 0;
+	j = 0;
+	x = 0;
+	while (src[i])
 	{
-		x = 1;
-		if ((*source == '\'' || *source == '"'))
+		if ((src[i] == '\'' || src[i] == '"'))
 		{
-			if (check == 0)
-			{
-				x = ft_closing_char(source, *source, -1) - 1;
-				check = 1;
-			}
-			else
-			{
-				x = 0;
-				check = 0;
-			}
-			source++;
+			x = ft_closing_char(&src[i], src[i], -1) - 1;
+			ft_strncpy(&dst[j], &src[i + 1], x);
+			i += x + 1;
+			j += x;
 		}
-		if (check == 1)
-		{
-			ft_strncpy(dest, source, x);
-			return ;
-		}
+		printf("ft_quoted...[i][j][%d][%d]\n", i, j);
+		i++;
 	}
 }
 
@@ -105,10 +78,10 @@ int	ft_isquotes(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
-			return (0);
+			return (1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 char	*erase_quotes(char *str)
@@ -116,42 +89,46 @@ char	*erase_quotes(char *str)
 	int		i;
 	char	*new_str;
 
-	if (ft_isquotes(str))
+	if (!ft_isquotes(str))
 		return (str);
-	i = ft_count_index(str);
+	i = 0;
+	printf("the string is %s\n", str);
+	i = ft_count_index(&str[i]) + 1;
+	printf("the index is %d\n", i);
 	if (i == 0 || i == -1)
 		return (str);
 	else
 	{
 		new_str = (char *)ft_calloc(i, sizeof(char));
 		new_str[i - 1] = '\0';
-		replace_string(str, new_str);
+		ft_quotedstrncpy(str, new_str);
+		printf("[new_str][%s]\n", new_str);
 	}
 	return (new_str);
 }
 
-int	check_assign(int check, char a, char **quoted_str, char *c)
+int	check_assign(int flag, char a, char **quoted_str, char *c)
 {
-	if (a != **quoted_str && check == 0)
+	if (a != **quoted_str && flag == 0)
 	{
-		check = 1;
+		flag = 1;
 		*c = **quoted_str;
 		(*quoted_str)++;
 	}
-	else if (a != **quoted_str && check == 1)
+	else if (a != **quoted_str && flag == 1)
 	{
-		check = 0;
+		flag = 0;
 		(*quoted_str)++;
 	}
-	return (check);
+	return (flag);
 }
 
-void	count_assign(char **aux, char **quoted_str, int *x, char a)
+void	count_assign(char **aux, char **quoted_str, int *i, char a)
 {
 	**aux = a;
 	(*quoted_str)++;
 	(*aux)++;
-	(*x)++;
+	(*i)++;
 }
 
 int	ft_isdupchar(char *str)
@@ -161,7 +138,7 @@ int	ft_isdupchar(char *str)
 	return (1);
 }
 
-int	ft_count_words(char *str)
+int	ft_count_chars(char *str)
 {
 	int	i;
 	int	len;
@@ -172,9 +149,13 @@ int	ft_count_words(char *str)
 	{
 		if ((str[i] == '"' || str[i] == '\''))
 		{
-			len = ft_closing_char(str, str[i], -1);
+			//printf("entramos con %s\n", &str[i]);
+			len = ft_closing_char(&str[i], str[i], -1);
 			if (len == -1)
+			{
+			//	printf("-1 -> [str[i], i, len][%s, %d, %d]\n", &str[i], i, len);
 				return (-1);
+			}
 			i += len + 1;
 		}
 		else if (str[i] == '|' || str[i] == '<' || str[i] == '>' \
@@ -182,10 +163,13 @@ int	ft_count_words(char *str)
 			return (i);
 		else
 			i++;
+		//printf("loop [str[i], i, len][%s, %d, %d]\n", &str[i], i, len);
 	}
 	return (i);
 }
 
+//Checks that '|' '<' '>' are saved alone and other none spaces are correctly allocated
+//As '|' '<' '>' are also not spaces the index_step is used
 void	fill_tokens(char *str, char **tokens)
 {
 	int	i;
@@ -199,7 +183,7 @@ void	fill_tokens(char *str, char **tokens)
 		if (str[i] == '|' || str[i] == '<' || str[i] == '>')
 			index_step = ft_isdupchar(&str[i]);
 		else if (str[i] != ' ')
-			index_step = ft_count_words(&str[i]);
+			index_step = ft_count_chars(&str[i]);
 		if (str[i] != ' ')
 		{
 			tokens[j] = ft_substr(&str[i], 0, index_step);
@@ -210,34 +194,33 @@ void	fill_tokens(char *str, char **tokens)
 		}
 		i++;
 	}
+	//printf("previo a erase_tokens_quotes. i es %d e index_step %d\n", i, index_step);
 	erase_tokens_quotes(tokens);
 }
 
-//REVISAR
-void	fill_map(char *quoted_str, char *unquoted_str, char **fill)
+void	token_without_quotes(char *quoted_str, char *unquoted_str, char **fill)
 {
-	int		check;
-	char	*aux;
+	int		i;
 	char	c;
-	int		x;
+	int		flag;
+	char	*aux;
 
-	x = 0;
-	check = 0;
+	i = 0;
+	flag = 0;
 	aux = *fill;
-	while (unquoted_str[x])
+	while (unquoted_str[i])
 	{
-		check = check_assign(check, unquoted_str[x], &quoted_str, &c);
-		if (check == 1)
+		flag = check_assign(flag, unquoted_str[i], &quoted_str, &c);
+		if (flag == 1)
 		{
-			while (*quoted_str != c && unquoted_str[x])
-			{
-				count_assign(&aux, &quoted_str, &x, '1');
-			}
+			while (*quoted_str != c && unquoted_str[i])
+				count_assign(&aux, &quoted_str, &i, '1');
 			quoted_str++;
-			check = 0;
+			flag = 0;
 		}
-		else if (check == 0)
-			count_assign(&aux, &quoted_str, &x, '1');
+		else if (flag == 0)
+			count_assign(&aux, &quoted_str, &i, '1');
+		i++;
 	}
 }
 
@@ -251,15 +234,17 @@ void	erase_tokens_quotes(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
+		//printf("[%d][%s]\n", i, tokens[i]);
 		aux1 = erase_quotes(tokens[i]);
+		//printf("the string is [%s]\n", aux1);
 		if (ft_strncmp(tokens[i], aux1, __INT_MAX__) != 0)
 		{
 			aux2 = tokens[i];
 			aux3 = tokens[i + 1];
 			tokens[i] = ft_strdup(aux1);
 			tokens[i + 1] = ft_strdup(aux1);
-			printf("tokens[%d][%d]\n", i, i + 1);
-			fill_map(aux2, tokens[i], &tokens[i + 1]);
+		//	printf("tokens[%d][%d]\n", i, i + 1);
+			token_without_quotes(aux2, tokens[i], &tokens[i + 1]);
 			free(aux3);
 			free(aux2);
 			free(aux1);
@@ -283,7 +268,7 @@ int	ft_count_tokens(char *str)
 			num_token++;
 		else if (str[i] != ' ')
 		{
-			j = ft_count_words(&str[i]);
+			j = ft_count_chars(&str[i]);
 			if (j < 0)
 				return (-1);
 			i += j - 1;
@@ -294,6 +279,8 @@ int	ft_count_tokens(char *str)
 	return (num_token);
 }
 
+//Does a token count. If the arguments are invalid then a NULL value is returned
+// Else the arguments are evaluated, lexed and saved in tokens
 char	**ft_get_tokens(char *str, t_minishell *minishell)
 {
 	int		i;
