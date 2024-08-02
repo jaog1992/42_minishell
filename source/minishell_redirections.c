@@ -51,8 +51,8 @@ int	malloc_redirection(char **tokens, t_data **node)
 	return (index);
 }
 
-// malloc redirection checks the number of redirections in tokens
-// Busca guardar las redirecciones antes de pipes
+// Malloc redirection checks the number of redirections in tokens
+// Each block is surrounded either by pipes or stdin/stdout
 int	fill_redirection(char **tokens, t_data *node)
 {
 	int i;
@@ -77,18 +77,6 @@ int	fill_redirection(char **tokens, t_data *node)
 		i += 2;
 	}
 	return (pipe_index);
-}
-
-int	check_redirection(char **tokens, int i, t_data **nodes)
-{
-	*nodes = ft_listlastnode(*nodes);
-	if (!fill_redirection(&tokens[i], *nodes))
-		return (-1);
-	else
-		i += fill_redirection(&tokens[i], *nodes);
-	ft_listaddnodetoend(nodes, init_data());
-	i++;
-	return (i);
 }
 
 t_data	*ft_redirection(char **tokens)

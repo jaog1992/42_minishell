@@ -23,7 +23,7 @@ int	ft_dup_work(t_fd *fd, int mode)
 		close(fd->fdin);
 		ft_putstr_fd("minishell: No such file or directory\n", 2);
 		if (mode == 0)
-			exit(1);
+			exit(CMD_GENERIC_ERROR);
 		return (0);
 	}
 	if (mode == 1)
@@ -51,13 +51,13 @@ void	ft_dups(char **redir, t_fd *fd, t_data *node)
 		while (redir[i])
 		{
 			if (ft_strncmp(redir[i], "<", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], 0, fd, node);
+				ft_get_fd(redir[i + 1], INPUT_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], 1, fd, node);
+				ft_get_fd(redir[i + 1], OUTPUT_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">>", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], 2, fd, node);
+				ft_get_fd(redir[i + 1], OUTPUT_REDIRECTION_APPEND, fd, node);
 			else if (ft_strncmp(redir[i], "<<", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], 3, fd, node);
+				ft_get_fd(redir[i + 1], HERE_DOCUMENT, fd, node);
 			i++;
 		}
 	}
@@ -74,9 +74,7 @@ void	ft_child(t_data *node, char **envp, t_fd *fd, int ret)
 			ret = 0;
 		}
 		else
-		{
 			execve(node->path, node->cmd, envp);
-		}
 	}
 	free(node->path);
 	exit(ret);

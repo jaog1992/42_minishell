@@ -18,7 +18,7 @@ void	ft_exit_error(char *str)
 	ft_putstr_fd("exit\n\n-minishell: exit: ", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
-	exit(0);
+	exit(CMD_SUCCESS);
 }
 
 int	ft_exit_arg_is_digit(char *str)
@@ -64,7 +64,7 @@ int	ft_exit(char *str)
 	{
 		free(str);
 		printf("exit\n");
-		exit(0);
+		exit(CMD_SUCCESS);
 	}
 	else if (ft_strncmp(str, "exit ", 5) == 0 && ft_exit_arg_is_pipe(&str[5]))
 	{

@@ -51,7 +51,7 @@ static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node)
 			ft_child(node, *envp, fd, ret);
 		}
 		else
-			exit(127);
+			exit(CMD_NOT_FOUND);
 	}
 	else
 		waitpid(pid, &ret, 0);
@@ -84,6 +84,19 @@ void	ft_fill_here_doc(t_data *node, int node_nb)
 	}
 }
 
+int	ft_count_nodes(t_data *node)
+{
+	int		node_nb;
+
+	node_nb = 1;
+	while (node->next)
+	{
+		node_nb++;
+		node = node->next;
+	}
+	return (node_nb);
+}
+
 void	ft_exec(t_data *node, char ***envp)
 {
 	int		node_nb;
@@ -95,6 +108,6 @@ void	ft_exec(t_data *node, char ***envp)
 	ft_fill_here_doc(node, node_nb);
 	if (ft_single_builtin(node, fd, envp, node_nb))
 	g_status = ft_exec_loop(node_nb, &fd, envp, node);
-	ft_close_all(&fd);
+	ft_close_fd(&fd);
 	ft_reset_fd(&fd);
 }

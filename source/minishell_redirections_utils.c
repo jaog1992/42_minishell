@@ -20,8 +20,8 @@ t_data	*init_data(void)
 	list = ft_calloc(1, sizeof(*list));
 	if (list == NULL)
 		return (NULL);
-	list->input = 0;
-	list->output = 0;
+	// list->input = 0;
+	// list->output = 0;
 	list->cmd = NULL;
 	list->path = NULL;
 	list->redirection = NULL;

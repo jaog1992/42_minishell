@@ -18,22 +18,22 @@
 
 void	ft_get_fd(char *file, int mode, t_fd *fd, t_data *node)
 {
-	if (mode == 0)
+	if (mode == INPUT_REDIRECTION)
 	{
 		ft_close(&fd->fdin, 0);
 		fd->fdin = open(file, O_RDONLY);
 	}
-	else if (mode == 1)
+	else if (mode == OUTPUT_REDIRECTION)
 	{
 		ft_close(&fd->fdout, 0);
 		fd->fdout = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	}
-	else if (mode == 2)
+	else if (mode == OUTPUT_REDIRECTION_APPEND)
 	{
 		ft_close(&fd->fdout, 0);
 		fd->fdout = open(file, O_CREAT | O_RDWR | O_APPEND, 0644);
 	}
-	else if (mode == 3)
+	else if (mode == HERE_DOCUMENT)
 	{
 		if (fd->fdin != -2 && fd->fdin != node->here_doc)
 			ft_close(&fd->fdin, 0);
@@ -61,7 +61,7 @@ void	ft_init_fd(t_fd *fd)
 	fd->key = NULL;
 }
 
-void	ft_close_all(t_fd *fd)
+void	ft_close_fd(t_fd *fd)
 {
 	ft_close(&fd->fdin, 0);
 	ft_close(&fd->fdout, 0);

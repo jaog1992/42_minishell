@@ -23,7 +23,7 @@ SRC_FILE	= minishell_main.c minishell_signals.c minishell_exit.c \
 				minishell_var_expansion.c minishell_tokens.c minishell_fill_data.c\
 				minishell_utils.c minishell_fd_utils.c  \
 				minishell_redirections.c minishell_redirections_utils.c minishell_double_redirection.c  \
-				minishell_builtin1.c minishell_builtin2.c minishell_builtin3.c \
+				minishell_builtin1.c minishell_builtin2.c minishell_builtin3.c minishell_builtin4.c \
 				minishell_builtins_exec.c minishell_builtins_exec2.c \
 				minishell_command.c minishell_command_exec.c minishell_command_exec2.c
 				

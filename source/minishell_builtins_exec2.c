@@ -68,16 +68,3 @@ int	ft_check_var(char *var, char *cmd)
 	}
 	return (1);
 }
-
-int	ft_count_nodes(t_data *node)
-{
-	int		node_nb;
-
-	node_nb = 1;
-	while (node->next)
-	{
-		node_nb++;
-		node = node->next;
-	}
-	return (node_nb);
-}

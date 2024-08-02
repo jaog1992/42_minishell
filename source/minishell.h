@@ -22,15 +22,26 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+//BOOLEAN DEFINES
 # define TRUE 1
 # define FALSE 0
+
+// OUTPUT COLOR DEFINES
 # define RED "\001\e[0;91m\002"
 # define GREEN "\001\e[0;92m\002"
 # define BLUE  "\001\e[0;94m\002"
 # define DEF_COLOR "\001\e[0;39m\002"
+
+// COMMAND EXIT STATUS DEFINES (g_status)
 # define CMD_NOT_FOUND 127
 # define CMD_SUCCESS 0
 # define CMD_GENERIC_ERROR 1
+
+// REDIRECTION TYPE DEFINES
+# define INPUT_REDIRECTION 0
+# define OUTPUT_REDIRECTION 1
+# define OUTPUT_REDIRECTION_APPEND 2
+# define HERE_DOCUMENT 3
 
 extern int g_status;
 
@@ -50,7 +61,6 @@ typedef struct s_minishell
 {
 	char	**env;
     char	**tokens;
-	t_data	*data;
 }			t_minishell;
 
 typedef struct s_fd
@@ -109,7 +119,7 @@ int		ft_count_tokens(char *str);
 
 void	ft_freelistdata(t_data **lst);
 int		check_redirection1(char **ptr);
-int		ft_datacuration(char *str, t_minishell *minishell, t_data **data);
+int		ft_lexer(char *str, t_minishell *minishell, t_data **data);
 // Command execution
 
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
@@ -131,7 +141,7 @@ int		ft_check_cmd(t_data *node, t_fd *fd, int *ret, int mode);
 void	ft_get_fd(char *file, int mode, t_fd *fd, t_data *node);
 void	ft_close(int *fd, int mode);
 void	ft_init_fd(t_fd *fd);
-void	ft_close_all(t_fd *fd);
+void	ft_close_fd(t_fd *fd);
 void	ft_reset_fd(t_fd *fd);
 void	ft_init_fd(t_fd *fd);
 //static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb);

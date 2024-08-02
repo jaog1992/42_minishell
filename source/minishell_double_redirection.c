@@ -66,6 +66,8 @@ void	print2buffer(char *str, int fd)
 }
 
 //pipe(int fd[2]) makes an unidirectional comms channel between 2 processes
+// if for the child and else for the father. The wait command wait the child
+// to end execution
 void	here_doc(char *key, t_data *node)
 {
 	int		fd1[2];
@@ -81,7 +83,7 @@ void	here_doc(char *key, t_data *node)
 		if (str)
 			print2buffer(str, fd1[1]);
 		close(fd1[1]);
-		exit(0);
+		exit(CMD_SUCCESS);
 	}
 	else
 	{
