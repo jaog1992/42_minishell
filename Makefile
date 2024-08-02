@@ -21,7 +21,8 @@ BIN_DIR     = ./
 # Source files
 SRC_FILE	= minishell_main.c minishell_signals.c minishell_exit.c \
 				minishell_var_expansion.c minishell_tokens.c \
-				minishell_utils.c
+				minishell_utils.c minishell_redirections.c \
+				minishell_redirections_utils.c minishell_fill_data.c
 SRC         = $(addprefix $(SRC_DIR), $(SRC_FILE))
 OBJ_FILE    = $(SRC_FILE:.c=.o)
 OBJ         = $(addprefix $(OBJ_DIR), $(OBJ_FILE))

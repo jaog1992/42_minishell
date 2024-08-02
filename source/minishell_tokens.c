@@ -282,26 +282,21 @@ int	ft_count_tokens(char *str)
 	return (num_token);
 }
 
-//Does a token count. If the arguments are invalid then a NULL value is returned
+// Does a token count. If the arguments are invalid a NULL value is returned
 // Else the arguments are evaluated, lexed and saved in tokens
-char	**ft_get_tokens(char *str, t_minishell *minishell)
+char	**ft_get_tokens(char *str)
 {
 	int		i;
+	char 	**tokens;
 
 	i = ft_count_tokens(str);
 	if (i == -1)
 		return (NULL);
 	printf("[token count][%d]\n", i);
-	minishell->tokens = (char **)ft_calloc(((i * 2) + 1), sizeof(char *));
-	minishell->tokens[i * 2] = 0;
-	if (!minishell->tokens)
+	tokens = (char **)ft_calloc(((i * 2) + 1), sizeof(char *));
+	tokens[i * 2] = 0;
+	if (!tokens)
 		return (NULL);
-	fill_tokens(str, minishell->tokens);
-	i = 0;
-	while (minishell->tokens[i])
-	{
-		printf("[%d token bf fill_array 2][%s]\n", i, minishell->tokens[i]);
-		i++;
-	}
-	return (minishell->tokens);
+	fill_tokens(str, tokens);
+	return (tokens);
 }

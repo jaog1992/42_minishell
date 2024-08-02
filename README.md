@@ -44,3 +44,4 @@
 
 REVISAR
 * double free en expansor de variables de entorno
+* Al buscar variables de entorno que no existen devuelve un segmentation faul!

@@ -36,13 +36,13 @@ extern int g_status;
 
 typedef struct s_data
 {
-	char			**cmd;
-	char			**redirection;
-	char			*path;
 	int				input;
 	int				output;
-	char			**tokens;
 	int				here_doc;
+	char			*path;
+	char			**cmd;
+	char			**tokens;
+	char			**redirection;
 	struct s_data	*next;
 }			t_data;
 
@@ -78,8 +78,8 @@ void	ft_signals_in_cat(void);
 
 // Exit function
 int		ft_exit(char *str);
-
 char	*ft_getenvval(char** env, char *str);
+
 // Expansor functions. They expand env variable values
 int		dollar_var_len(char *str);
 char	*dollar_variable(char *str);
@@ -100,7 +100,7 @@ int		ft_count_words(char *str);
 void	fill_tokens(char *str, char **tokens);
 void	fill_map(char *quote, char *no, char **fill);
 void	erase_tokens_quotes(char **tokens);
-char	**ft_get_tokens(char *str, t_minishell *minishell);
+char	**ft_get_tokens(char *str);
 int		ft_count_tokens(char *str);
 
 // General
@@ -108,7 +108,6 @@ int		ft_count_tokens(char *str);
 void	ft_lstclear1(t_data **lst);
 int		check_redirection1(char **ptr);
 int		ft_general_function(char *str, t_minishell *minishell, t_data **data);
-int		check_invalid_pipe(char **tokens);
 // Command execution
 
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
@@ -134,4 +133,13 @@ void	ft_init_fd(t_fd *fd);
 void	ft_fill_here_doc(t_data *node, int node_nb);
 void	ft_exec(t_data *node, char ***envp);
 
+//redirection
+t_data	*ft_redirection(char **tokens);
+t_data	*init_data(void);
+t_data	*ft_listlastnode(t_data *lst);
+void	ft_listaddnodetoend(t_data **lst, t_data *new);
+int		check_invalid_pipe(char **tokens);
+
+//commands
+t_data	*ft_commands(char **tokens, t_data *aux);
 #endif

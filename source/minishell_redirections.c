@@ -13,11 +13,11 @@
 #include "minishell.h"
 #include "../libft/source/libft.h"
 
-int	count_len(char **tokens, int x)
+int	count_redirection_char_len(char **tokens, int i)
 {
-	if ((tokens[x][0] == '<' || tokens[x][0] == '>') && tokens[x + 1][0] == '0')
+	if ((tokens[i][0] == '<' || tokens[i][0] == '>') && tokens[i + 1][0] == '0')
 	{
-		if (tokens[x + 2] && tokens[x + 2][0] != '|')
+		if (tokens[i + 2] && tokens[i + 2][0] != '|')
 			return (2);
 		else
 			return (1);
@@ -27,22 +27,22 @@ int	count_len(char **tokens, int x)
 
 int	malloc_redirection(char **tokens, t_data **node)
 {
-	int	index;
-	int	x;
+	int	i;
 	int	len;
+	int	index;
 
+	i = 0;
 	len = 0;
-	x = 0;
 	index = 0;
-	while (tokens[x])
+	while (tokens[i])
 	{
-		if (tokens[x] && tokens[x][0] == '|' && tokens[x + 1][0] == '0')
+		if (tokens[i] && tokens[i][0] == '|' && tokens[i + 1][0] == '0')
 			break ;
-		len += count_len(tokens, x);
-		x += 2;
+		len += count_redirection_char_len(tokens, i);
+		i += 2;
 	}
-	if (tokens[x] && tokens[x][0] == '|' && tokens[x + 1][0] == '0')
-		index = x;
+	if (tokens[i] && tokens[i][0] == '|' && tokens[i + 1][0] == '0')
+		index = i;
 	if (len > 0)
 	{
 		(*node)->redirection = (char **)malloc((len + 1) * sizeof(char *));
@@ -51,66 +51,67 @@ int	malloc_redirection(char **tokens, t_data **node)
 	return (index);
 }
 
+// malloc redirection checks the number of redirections in tokens
+// Busca guardar las redirecciones antes de pipes
 int	fill_redirection(char **tokens, t_data *node)
 {
-	int	x;
-	int	index;
-	int	i;
+	int i;
+	int	j;
+	int	pipe_index;
 
-	index = malloc_redirection(tokens, &node);
-	x = 0;
+	pipe_index = malloc_redirection(tokens, &node);
 	i = 0;
-	while (tokens[x])
+	j = 0;
+	while (tokens[i])
 	{
-		if (tokens[x] && tokens[x][0] == '|' && tokens[x + 1][0] == '0')
+		if (tokens[i] && tokens[i][0] == '|' && tokens[i + 1][0] == '0')
 			break ;
-		if ((tokens[x][0] == '<' || tokens[x][0] == '>') && tokens[x
+		if ((tokens[i][0] == '<' || tokens[i][0] == '>') && tokens[i
 			+ 1][0] == '0')
 		{
-			node->redirection[i] = ft_strdup(tokens[x]);
-			if (tokens[x + 2] && tokens[x + 2][0] != '|')
-				node->redirection[++i] = ft_strdup(tokens[x + 2]);
-			i++;
+			node->redirection[j] = ft_strdup(tokens[i]);
+			if (tokens[i + 2] && tokens[i + 2][0] != '|')
+				node->redirection[++j] = ft_strdup(tokens[i + 2]);
+			j++;
 		}
-		x += 2;
+		i += 2;
 	}
-	return (index);
+	return (pipe_index);
 }
 
-int	check_redirection(char **tokens, int x, t_data **nodes)
+int	check_redirection(char **tokens, int i, t_data **nodes)
 {
-	*nodes = put_last_node(*nodes);
-	if (!fill_redirection(tokens + x, *nodes))
+	*nodes = ft_listlastnode(*nodes);
+	if (!fill_redirection(&tokens[i], *nodes))
 		return (-1);
 	else
-		x += fill_redirection(tokens + x, *nodes);
-	ft_lstadd_back2(nodes, ft_lstnew2());
-	x++;
-	return (x);
+		i += fill_redirection(&tokens[i], *nodes);
+	ft_listaddnodetoend(nodes, init_data());
+	i++;
+	return (i);
 }
 
-t_data	*redirection(char **tokens)
+t_data	*ft_redirection(char **tokens)
 {
-	int		x;
-	t_data	*nodes;
-	t_data	*aux;
 	int		i;
+	int		pipe_index;
+	t_data	*aux;
+	t_data	*nodes;
 
-	i = -1;
-	x = 0;
-	nodes = ft_lstnew2();
+	i = 0;
+	pipe_index = -1;
+	nodes = init_data();
 	aux = nodes;
-	x = 0;
-	while (tokens && tokens[x])
+	while (tokens && tokens[i])
 	{
-		nodes = put_last_node(nodes);
-		i = fill_redirection(tokens + x, nodes);
-		if (i == 0)
+		nodes = ft_listlastnode(nodes);
+		pipe_index = fill_redirection(&tokens[i], nodes);
+		if (pipe_index == 0)
 			break ;
 		else
-			x += i;
-		ft_lstadd_back2(&aux, ft_lstnew2());
-		x += 2;
+			i += pipe_index;
+		ft_listaddnodetoend(&aux, init_data());
+		i += 2;
 	}
 	return (aux);
 }

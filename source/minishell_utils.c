@@ -15,32 +15,6 @@
 
 extern int	g_status;
 
-int	check_invalid_pipe(char **tokens)
-{
-	int	len;
-
-	len = 0;
-	while (tokens && tokens[len])
-		len++;
-	if (len > 0 && (tokens[0][0] == '|') && tokens[1][0] == '0')
-	{
-		ft_putstr_fd("bash: syntax error near unexpected token `", 2);
-		ft_putstr_fd(tokens[0], 2);
-		ft_putendl_fd("\'", 2);
-		ft_free2dstr(tokens);
-		return (1);
-	}
-	else if (len > 0 && tokens[len - 2][0] == '|' && tokens[len - 1][0] == '0')
-	{
-		ft_putstr_fd("bash: syntax error near unexpected token `", 2);
-		ft_putstr_fd(tokens[len - 2], 2);
-		ft_putendl_fd("\'", 2);
-		ft_free2dstr(tokens);
-		return (2);
-	}
-	return (0);
-}
-
 void	ft_lstclear1(t_data **lst)
 {
 	t_data	*aux;
