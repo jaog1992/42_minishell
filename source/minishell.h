@@ -76,6 +76,8 @@ void	ft_signals(void);
 void	signal_handler_in_cat(int num);
 void	ft_signals_in_cat(void);
 
+// status
+int	ft_status(char *str);
 // Exit function
 int		ft_exit(char *str);
 char	*ft_getenvval(char** env, char *str);
@@ -105,15 +107,19 @@ int		ft_count_tokens(char *str);
 
 // General
 
-void	ft_lstclear1(t_data **lst);
+void	ft_freelistdata(t_data **lst);
 int		check_redirection1(char **ptr);
-int		ft_general_function(char *str, t_minishell *minishell, t_data **data);
+int		ft_datacuration(char *str, t_minishell *minishell, t_data **data);
 // Command execution
 
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
 void	ft_call_builtin(char **cmd, char ***envp);
-int		ft_is_builtin(char **cmd);
 char	*ft_subst_var(char *var);
+void	fill_cmd_path(t_data *list, char **envp);
+int		second_char_exists(char *str, char a);
+char	*check_str(char *f, char *str, char *cmd, char ***p);
+char	*check_if_command(char **envp, char *str);
+
 //static void	ft_check_var2(char *var, char *cmd);
 int		ft_check_var(char *var, char *cmd);
 int		ft_count_nodes(t_data *node);
@@ -142,4 +148,38 @@ int		check_invalid_pipe(char **tokens);
 
 //commands
 t_data	*ft_commands(char **tokens, t_data *aux);
+void	here_doc(char *key, t_data *node);
+
+// builtins
+
+//Prints the path of the actual working directory
+void	ft_pwd(void);
+
+//Changes current working directoy, updating PWD and OLDPWD
+void	ft_chdir(char *dir, char ***env);
+
+//Adds/replaces variable in environment
+//Hay que meter '=' después de var porque si no puede confundir
+//variables que empiecen igual.
+void	ft_export(char **cmd, char ***env);
+void	ft_export_job(char *var, char *value, char ***env);
+
+//Prints the env
+void	ft_env(char **env, int mode);
+
+//Removes variable from environment
+//Si no coincide no hace nada
+//Hay que meter '=' después de var porque si no puede confundir
+//variables que empiecen igual.
+void	ft_unset(char *var, char ***env);
+
+//Prints arguments separated with a space followed by a new line
+//Flag "-n" - Do not output a trailing newline.
+void	ft_echo(char **cmd, char **env);
+
+//builtins commands
+
+int		ft_builtncmp(const char *s1, const char *s2, size_t n);
+void	ft_call_builtin(char **cmd, char ***envp);
+int		ft_is_builtin(char **cmd);
 #endif

@@ -43,7 +43,6 @@ int	ft_count_index(char *str)
 			index_count++;
 		}
 	}
-	//printf("ft_count_index[i][index_count][%d][%d]\n", i, index_count);
 	return (index_count);
 }
 
@@ -67,7 +66,6 @@ void	ft_quotedstrncpy(char *src, char *dst)
 		}
 		else
 			ft_strncpy(&dst[j++], &src[i], 1);
-	//	printf("ft_quoted...[i][j][%d][%d]\n", i, j);
 		i++;
 	}
 }
@@ -94,9 +92,7 @@ char	*erase_quotes(char *str)
 	if (!ft_isquotes(str))
 		return (str);
 	i = 0;
-	//printf("the string is %s\n", str);
 	i = ft_count_index(&str[i]) + 1;
-	//printf("the index is %d\n", i);
 	if (i == 0 || i == -1)
 		return (str);
 	else
@@ -104,7 +100,6 @@ char	*erase_quotes(char *str)
 		new_str = (char *)ft_calloc(i, sizeof(char));
 		new_str[i - 1] = '\0';
 		ft_quotedstrncpy(str, new_str);
-	//	printf("[new_str][%s]\n", new_str);
 	}
 	return (new_str);
 }
@@ -151,13 +146,9 @@ int	ft_count_chars(char *str)
 	{
 		if ((str[i] == '"' || str[i] == '\''))
 		{
-			//printf("entramos con %s\n", &str[i]);
 			len = ft_closing_char(&str[i], str[i], -1);
 			if (len == -1)
-			{
-			//	printf("-1 -> [str[i], i, len][%s, %d, %d]\n", &str[i], i, len);
 				return (-1);
-			}
 			i += len + 1;
 		}
 		else if (str[i] == '|' || str[i] == '<' || str[i] == '>' \
@@ -165,7 +156,6 @@ int	ft_count_chars(char *str)
 			return (i);
 		else
 			i++;
-		//printf("loop [str[i], i, len][%s, %d, %d]\n", &str[i], i, len);
 	}
 	return (i);
 }
@@ -196,8 +186,6 @@ void	fill_tokens(char *str, char **tokens)
 		}
 		i++;
 	}
-	//printf("previo a erase_tokens_quotes. i es %d e index_step %d\n", i, index_step);
-	//printf("fill_tokens bf erase is %s\n", tokens[0]);
 	erase_tokens_quotes(tokens);
 }
 
@@ -237,16 +225,13 @@ void	erase_tokens_quotes(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
-		//printf("[%d][%s]\n", i, tokens[i]);
 		aux1 = erase_quotes(tokens[i]);
-		//printf("the string is [%s]\n", aux1);
 		if (ft_strncmp(tokens[i], aux1, __INT_MAX__) != 0)
 		{
 			aux2 = tokens[i];
 			aux3 = tokens[i + 1];
 			tokens[i] = ft_strdup(aux1);
 			tokens[i + 1] = ft_strdup(aux1);
-		//	printf("tokens[%d][%d]\n", i, i + 1);
 			token_without_quotes(aux2, tokens[i], &tokens[i + 1]);
 			free(aux3);
 			free(aux2);
@@ -292,7 +277,7 @@ char	**ft_get_tokens(char *str)
 	i = ft_count_tokens(str);
 	if (i == -1)
 		return (NULL);
-	printf("[token count][%d]\n", i);
+	// printf("[token count][%d]\n", i);
 	tokens = (char **)ft_calloc(((i * 2) + 1), sizeof(char *));
 	tokens[i * 2] = 0;
 	if (!tokens)

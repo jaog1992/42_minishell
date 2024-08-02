@@ -55,20 +55,20 @@ void print_history(void)
 	}
 }
 
-void	ft_env(char *str, t_minishell *minishell)
-{
-	int	i;
+// void	ft_env(char *str, t_minishell *minishell)
+// {
+// 	int	i;
 	
-	i = 0;
-	if (ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)
-	{
-		while (minishell->env[i])
-		{
-			printf("%s\n", minishell->env[i]);
-			i++;
-		}
-	}
-}
+// 	i = 0;
+// 	if (ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)
+// 	{
+// 		while (minishell->env[i])
+// 		{
+// 			printf("%s\n", minishell->env[i]);
+// 			i++;
+// 		}
+// 	}
+// }
 
 
 void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
@@ -77,15 +77,12 @@ void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 	char	**str2ddup;
 
 	len = ft_str2dlen(minishell->env) + len;
-	printf("Former env var num was %d, current is %d\n", ft_str2dlen(minishell->env), len);
-	printf("The new var is [%s]\n", str);
 	str2ddup = (char**)malloc(sizeof(char*) * (len + 1));
 	str2ddup[len--] = NULL;
 	i = len;
 	if (ft_str2dlen(minishell->env) == len)
 	{
 		str2ddup[i] = ft_strdup(str);
-		printf("copiamos la nueva variable: %s\n", str2ddup[i]);
 	}
 	i--;
 	while(len >= 0)
@@ -94,20 +91,15 @@ void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 		len--;
 		i--;
 	}
-	printf("última variable vieja de env [%s]\n", minishell->env[ft_str2dlen(minishell->env) - 1]);
 	ft_free2dstr(minishell->env);
-	if (minishell->env == NULL)
-		printf("Free correcto\n");
 	minishell->env = ft_str2ddup(str2ddup);
-	printf("última variable nueva de env [%s]\n", minishell->env[ft_str2dlen(minishell->env) - 1]);
-
 }
 
-void	ft_export(char *str, t_minishell *minishell)
-{
-	if (ft_strncmp(str, "export ", 7) == 0 && ft_strlen(str) >= 8)
-		ft_str2ddupenv(minishell, str + 7, 1);
-}
+// void	ft_export(char *str, t_minishell *minishell)
+// {
+// 	if (ft_strncmp(str, "export ", 7) == 0 && ft_strlen(str) >= 8)
+// 		ft_str2ddupenv(minishell, str + 7, 1);
+// }
 
 char *ft_getenvval(char** env, char *str)
 {
@@ -157,7 +149,7 @@ char	*ft_get_user_input(char **env)
 		printf("exit\n");
 		if (aux)
 			free(aux);
-		exit(0);
+		exit(CMD_SUCCESS);
 	}
 	free(aux);
 	if (str == NULL || *str == 0)
@@ -171,63 +163,33 @@ char	*ft_get_user_input(char **env)
 	return (aux);
 }
 
-int	ft_general_function(char *str, t_minishell *minishell, t_data **data)
+int	ft_datacuration(char *str, t_minishell *minishell, t_data **data)
 {
 	char	*aux;
-	int		i = 0;
-	t_data	*current;
+	// int		i = 0;
+	// t_data	*current;
 
 	g_status = 0;
 	aux = ft_variable_expansion_check(str, minishell);
-	printf("The aux string is [%s][len][%ld]\n", aux, ft_strlen(aux));
+	// printf("The aux string is [%s][len][%ld]\n", aux, ft_strlen(aux));
 	minishell->tokens = ft_get_tokens(aux);
 	if (minishell->tokens == NULL)
 	{
 		printf("-bash: $%s: command not found\n", str);
 		return (-1);
 	}
-	while (minishell->tokens[i])
-	{
-		printf("[token %d][%s]\n", i, minishell->tokens[i]);
-		i++;
-	}
+	// while (minishell->tokens[i])
+	// {
+	// 	printf("[token %d][%s]\n", i, minishell->tokens[i]);
+	// 	i++;
+	// }
 	g_status = check_invalid_pipe(minishell->tokens);
 	if (g_status)
 	 	return (g_status);
 	free(aux);
 	*data = ft_redirection(minishell->tokens);
 	*data = ft_commands(minishell->tokens, *data);
-	current = *data;
-	while (current)
-	{
-		i = 0;
-	    if (current->redirection) // Verifica que redirection no sea NULL
-    	{
-			while (current->redirection[i] != NULL)
-			{
-				printf("[i][redirection][%d][%s]\n", i, current->redirection[i]);
-				i++;
-			}
-		}
-		else
-		{
-			printf("No redirection data available\n");
-		}
-		i = 0;
-	    if (current->cmd) // Verifica que redirection no sea NULL
-    	{
-			while (current->cmd[i] != NULL)
-			{
-				printf("[i][cmd][%d][%s]\n", i, current->cmd[i]);
-				i++;
-			}
-		}
-		else
-		{
-			printf("No redirection data available\n");
-		}
-		current = current->next;
-	}
+	// current = *data;
 	g_status = check_redirection1((*data)->redirection);
 	if (g_status)
 	{
@@ -235,18 +197,52 @@ int	ft_general_function(char *str, t_minishell *minishell, t_data **data)
 		return (g_status);
 	}
 	ft_free2dstr(minishell->tokens);
-	//fill_cmd_path(*data, env);
+	fill_cmd_path(*data, minishell->env);
+	// while (current)
+	// {
+	// 	i = 0;
+	//     if (current->tokens)
+    // 	{
+	// 		while (current->tokens[i] != NULL)
+	// 		{
+	// 			printf("[i][tokens][%d][%s]\n", i, current->tokens[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	// 	else
+	// 		printf("No token data available\n");
+	// 	i = 0;
+	//     if (current->redirection)
+    // 	{
+	// 		while (current->redirection[i] != NULL)
+	// 		{
+	// 			printf("[i][redirection][%d][%s]\n", i, current->redirection[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	// 	else
+	// 		printf("No redirection data available\n");
+	// 	i = 0;
+	//     if (current->cmd)
+    // 	{
+	// 		while (current->cmd[i] != NULL)
+	// 		{
+	// 			printf("[i][cmd][%d][%s]\n", i, current->cmd[i]);
+	// 			i++;
+	// 		}
+	// 	}
+	// 	else
+	// 		printf("No redirection data available\n");
+	// 	i = 0;
+	//     if (current->path)
+	// 		printf("[path][%s]\n", current->path);
+	// 	else
+	// 		printf("No path data available\n");
+	// 	current = current->next;
+	// }
 	return (0);
 }
 
-void ft_builtin(char *str, t_minishell *minishell)
-{
-	ft_exit(str);
-	ft_env(str, minishell);
-	ft_export(str, minishell);
-}
-
-//void	ft_program(char **env)
 void	ft_program(t_minishell *minishell, t_data **data)
 {
 	char	*str;
@@ -260,21 +256,20 @@ void	ft_program(t_minishell *minishell, t_data **data)
 		if (str && *str != '\0' && ft_status(str))
 		{
 			add_history(str);
-			ret = ft_general_function(str, minishell, data);
+			ret = ft_datacuration(str, minishell, data);
 			if (ret > 0)
 				g_status = ret;
-	//		if (!ret)
-	//			ft_exec(*data, minishell->env);
-	//		if (*data)
-	//			ft_lstclear1(data);
+			if (!ret)
+				ft_exec(*data, &minishell->env);
+			if (*data)
+				ft_freelistdata(data);
 		}
-		//if (minishell->tokens)
-		//	ft_free2dstr(minishell->tokens);
-	//}
-	//if (str != NULL)
-	//	free(str);
-	print_history();
+		// if (minishell->tokens)
+		// 	ft_free2dstr(minishell->tokens);
 	}
+	else if (str)
+		free(str);
+	// print_history();
 }
 
 t_minishell *init_minishell(char **envp)

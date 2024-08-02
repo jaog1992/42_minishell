@@ -15,7 +15,7 @@
 
 extern int	g_status;
 
-void	ft_lstclear1(t_data **lst)
+void	ft_freelistdata(t_data **lst)
 {
 	t_data	*aux;
 

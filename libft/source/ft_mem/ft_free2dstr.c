@@ -28,7 +28,5 @@ void ft_free2dstr(char **ptr)
 	}
 	free(ptr);
 	ptr = NULL;
-	if (ptr == NULL)
-		printf("El ptr ya debería ser nulo\n");
 	return ;
 }
