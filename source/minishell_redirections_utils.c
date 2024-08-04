@@ -55,12 +55,12 @@ void	ft_listaddnodetoend(t_data **lst, t_data *new)
 
 int	check_invalid_pipe(char **tokens)
 {
-	int	x;
+	int	i;
 
-	x = 0;
-	while (tokens && tokens[x])
-		x++;
-	if (x > 0 && (tokens[0][0] == '|') && tokens[1][0 == '0'])
+	i = 0;
+	while (tokens && tokens[i])
+		i++;
+	if (i > 0 && (tokens[0][0] == '|') && tokens[1][0 == '0'])
 	{
 		ft_putstr_fd("bash: syntax error near unexpected token `", 2);
 		ft_putstr_fd(tokens[0], 2);
@@ -68,10 +68,10 @@ int	check_invalid_pipe(char **tokens)
 		ft_free2dstr(tokens);
 		return (1);
 	}
-	else if (x > 0 && tokens[x - 2][0] == '|' && tokens[x - 1][0] == '0')
+	else if (i > 1 && tokens[i - 2][0] == '|' && tokens[i - 1][0] == '0')
 	{
 		ft_putstr_fd("bash: syntax error near unexpected token `", 2);
-		ft_putstr_fd(tokens[x - 2], 2);
+		ft_putstr_fd(tokens[i - 2], 2);
 		ft_putendl_fd("\'", 2);
 		ft_free2dstr(tokens);
 		return (2);
