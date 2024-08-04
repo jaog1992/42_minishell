@@ -13,7 +13,7 @@
 #include "../libft.h"
 #include <stdio.h>
 
-void ft_free2dstr(char **ptr)
+void	ft_free2dstr(char **ptr)
 {
 	size_t	i;
 

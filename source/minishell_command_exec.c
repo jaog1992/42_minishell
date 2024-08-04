@@ -107,7 +107,7 @@ void	ft_exec(t_data *node, char ***envp)
 	node_nb = ft_count_nodes(node);
 	ft_fill_here_doc(node, node_nb);
 	if (ft_single_builtin(node, fd, envp, node_nb))
-	g_status = ft_exec_loop(node_nb, &fd, envp, node);
+		g_status = ft_exec_loop(node_nb, &fd, envp, node);
 	ft_close_fd(&fd);
 	ft_reset_fd(&fd);
 }

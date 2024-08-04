@@ -27,15 +27,15 @@ int	ft_exit_arg_is_digit(char *str)
 	int	len;
 
 	i = 0;
-    len = ft_strlen(str);
+	len = ft_strlen(str);
 	if (str[0] == '-' || str[0] == '+')
 		i++;
 	while (str[i] && i < len)
-    {
+	{
 		if (!ft_isdigit(str[i]))
 			ft_exit_error(str);
 		i++;
-    }
+	}
 	return (1);
 }
 
@@ -45,13 +45,13 @@ int	ft_exit_arg_is_pipe(char *str)
 	int	len;
 
 	i = 0;
-    len = ft_strlen(str);
+	len = ft_strlen(str);
 	while (str[i] && i < len)
-    {
+	{
 		if (str[i] == '|')
 			return (0);
-        i++;
-    }
+		i++;
+	}
 	return (1);
 }
 
@@ -71,8 +71,8 @@ int	ft_exit(char *str)
 		if (ft_exit_arg_is_digit(&str[5]))
 		{
 			printf("exit\n");
-            num = atoi(&str[5]);
-            free(str);
+			num = atoi(&str[5]);
+			free(str);
 			exit(num);
 		}
 	}

@@ -38,28 +38,13 @@ int	ft_status(char *str)
 	return (1);
 }
 
-// void	ft_env(char *str, t_minishell *minishell)
-// {
-// 	int	i;
-	
-// 	i = 0;
-// 	if (ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)
-// 	{
-// 		while (minishell->env[i])
-// 		{
-// 			printf("%s\n", minishell->env[i]);
-// 			i++;
-// 		}
-// 	}
-// }
-
-void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
+void	ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 {
 	int		i;
 	char	**str2ddup;
 
 	len = ft_str2dlen(minishell->env) + len;
-	str2ddup = (char**)malloc(sizeof(char*) * (len + 1));
+	str2ddup = (char **)malloc(sizeof (char *) * (len + 1));
 	str2ddup[len--] = NULL;
 	i = len;
 	if (ft_str2dlen(minishell->env) == len)
@@ -67,7 +52,7 @@ void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 		str2ddup[i] = ft_strdup(str);
 	}
 	i--;
-	while(len >= 0)
+	while (len >= 0)
 	{
 		str2ddup[i] = ft_strdup(minishell->env[len]);
 		len--;
@@ -77,25 +62,19 @@ void ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 	minishell->env = ft_str2ddup(str2ddup);
 }
 
-// void	ft_export(char *str, t_minishell *minishell)
-// {
-// 	if (ft_strncmp(str, "export ", 7) == 0 && ft_strlen(str) >= 8)
-// 		ft_str2ddupenv(minishell, str + 7, 1);
-// }
-
-char *ft_getenvval(char** env, char *str)
+char	*ft_getenvval(char **env, char *str)
 {
-	int i;
-	int j;
-	int flag;
-	char *str2;
+	int		i;
+	int		j;
+	int		flag;
+	char	*str2;
 
 	i = 0;
 	j = 0;
 	flag = 0;
 	if (!env || !str)
-		return NULL;
-	while(env[i])
+		return (NULL);
+	while (env[i])
 	{
 		while (str[j])
 		{
@@ -104,26 +83,28 @@ char *ft_getenvval(char** env, char *str)
 			j++;
 		}
 		if (flag == 0)
-			break;
+			break ;
 		j = 0;
 		flag = 0;
 		i++;
 	}
 	if (!env[i] || j == 0)
-		return NULL;
+		return (NULL);
 	str2 = ft_strdup(env[i] + ft_strlen(str) + 1);
 	return (str2);
 }
 
-void ft_history(void)
+void	ft_history(void)
 {
-	int i;
+	int			i;
+	HIST_ENTRY	**mylist;
 
 	i = 0;
-	HIST_ENTRY **mylist = history_list ();
-	if (!mylist) {
+	mylist = history_list ();
+	if (!mylist)
+	{
 		printf("No history available.\n");
-		return;
+		return ;
 	}
 	while (mylist[i])
 	{

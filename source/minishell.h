@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "../libft/source/libft.h"
+# include "../libft/source/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -43,7 +43,7 @@
 # define OUTPUT_REDIRECTION_APPEND 2
 # define HERE_DOCUMENT 3
 
-extern int g_status;
+extern int	g_status;
 
 typedef struct s_data
 {
@@ -60,7 +60,7 @@ typedef struct s_data
 typedef struct s_minishell
 {
 	char	**env;
-    char	**tokens;
+	char	**tokens;
 }			t_minishell;
 
 typedef struct s_fd
@@ -87,10 +87,10 @@ void	signal_handler_in_cat(int num);
 void	ft_signals_in_cat(void);
 
 // status
-int	ft_status(char *str);
+int		ft_status(char *str);
 // Exit function
 int		ft_exit(char *str);
-char	*ft_getenvval(char** env, char *str);
+char	*ft_getenvval(char **env, char *str);
 
 // Expansor functions. They expand env variable values
 int		dollar_var_len(char *str);
@@ -107,7 +107,9 @@ char	*ft_variable_expansion_check(char *str, t_minishell *minishell);
 int		check_assign(int check, char a, char **quote, char *c);
 void	count_assign(char **aux, char **quote, int *x, char a);
 int		ft_isdupchar(char *str);
-// int		ft_word_length(char *str);
+char	*erase_quotes(char *str);
+void	token_without_quotes(char *quoted_str, char *unquoted_str, char **fill);
+int		ft_count_chars(char *str);
 int		ft_count_words(char *str);
 void	fill_tokens(char *str, char **tokens);
 void	fill_map(char *quote, char *no, char **fill);
@@ -144,8 +146,6 @@ void	ft_init_fd(t_fd *fd);
 void	ft_close_fd(t_fd *fd);
 void	ft_reset_fd(t_fd *fd);
 void	ft_init_fd(t_fd *fd);
-//static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb);
-//static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node);
 void	ft_fill_here_doc(t_data *node, int node_nb);
 void	ft_exec(t_data *node, char ***envp);
 

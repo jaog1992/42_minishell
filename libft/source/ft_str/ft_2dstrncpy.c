@@ -12,12 +12,12 @@
 
 #include "../libft.h"
 
-void	ft_2dstrncpy(char **source, char **dest, int x)
+void	ft_2dstrncpy(char **source, char **dest, int i)
 {
-	while (x > 0)
+	while (i > 0)
 	{
 		**dest = **source;
-		x--;
+		i--;
 		(*source)++;
 		(*dest)++;
 	}

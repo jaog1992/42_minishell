@@ -55,7 +55,7 @@ int	malloc_redirection(char **tokens, t_data **node)
 // Each block is surrounded either by pipes or stdin/stdout
 int	fill_redirection(char **tokens, t_data *node)
 {
-	int i;
+	int	i;
 	int	j;
 	int	pipe_index;
 

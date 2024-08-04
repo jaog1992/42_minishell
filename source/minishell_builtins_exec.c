@@ -63,8 +63,8 @@ int	ft_is_builtin(char **cmd)
 					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 4)
 			|| (ft_builtncmp(cmd[0], "env", ft_strlen(cmd[0])) == 0
 				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "$?",
-					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 2) ||
-				(ft_builtncmp(cmd[0], "pwd", ft_strlen(cmd[0])) == 0
+					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 2)
+			|| (ft_builtncmp(cmd[0], "pwd", ft_strlen(cmd[0])) == 0
 				&& ft_strlen(cmd[0]) == 3))
 			return (1);
 		if ((ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])) == 0

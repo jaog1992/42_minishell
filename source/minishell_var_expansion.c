@@ -12,35 +12,19 @@
 
 #include "minishell.h"
 #include "../libft/source/libft.h"
-#include <readline/history.h>
-#include <readline/readline.h>
 
-extern int g_status;
+extern int	g_status;
 
 int	dollar_var_len(char *str)
 {
-	int	x;
+	int	i;
 
-	x = 0;
+	i = 0;
 	if (str[0] == '?' || str[0] == '_')
 		return (1);
-	while (str[x] && (ft_isalnum(str[x]) || str[x] == '_'))
-		x++;
-	return (x);
-}
-
-int	ft_closing_char(char *str, char c, int ret)
-{
-	int i;
-    
-    i = 1;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
-	}
-	return (ret);
+	return (i);
 }
 
 char	*dollar_variable(char *str)
@@ -62,20 +46,6 @@ char	*dollar_variable(char *str)
 		i++;
 	}
 	return (str2);
-}
-
-int	find_pos(char *str, int x)
-{
-	int	i;
-
-	i = x + 1;
-	while (str[i])
-	{
-		if (str[i] == str[x])
-			return (i);
-		i++;
-	}
-	return (-1);
 }
 
 char	*check_var(char *var, char *one, char *second, t_minishell *mshell)
@@ -116,13 +86,6 @@ int	ft_variable_expansion(char **str, int x, t_minishell *minishell)
 	*str = first_part;
 	free(var);
 	return (-1);
-}
-
-int	check_next_char(char c)
-{
-	if (ft_isalnum(c) || c == '_' || c == '?')
-		return (0);
-	return (1);
 }
 
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell)

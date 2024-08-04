@@ -24,7 +24,7 @@ char	*add_new_line_char(char *aux, char *str)
 	free(aux);
 	aux = temp;
 	temp = ft_strjoin(aux, str);
-    free(aux);
+	free(aux);
 	aux = temp;
 	return (aux);
 }
@@ -38,7 +38,7 @@ char	*double_redirection(char *key)
 	while (TRUE)
 	{
 		ft_signals_in_cat();
-        aux = ft_strjoin(ft_strjoin(GREEN, "heredoc> "), DEF_COLOR);
+		aux = ft_strjoin(ft_strjoin(GREEN, "heredoc> "), DEF_COLOR);
 		str = readline(aux);
 		if (!str)
 		{
