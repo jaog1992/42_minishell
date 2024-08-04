@@ -43,6 +43,10 @@
 # define OUTPUT_REDIRECTION_APPEND 2
 # define HERE_DOCUMENT 3
 
+// FT_ENV MODES
+# define ENV_BASIC_FORMAT 0
+# define ENV_EXPORT_FORMAT 1
+
 extern int	g_status;
 
 typedef struct s_data
@@ -74,10 +78,6 @@ typedef struct s_fd
 	char	*key;
 }			t_fd;
 
-// Utils
-// Utils - str
-
-// Utils - malloc
 
 // Signals
 void	rl_replace_line(const char *text, int clear_undo);
@@ -120,7 +120,7 @@ int		ft_count_tokens(char *str);
 // General
 
 void	ft_freelistdata(t_data **lst);
-int		check_redirection1(char **ptr);
+int		check_invalid_redirection(char **ptr);
 int		ft_lexer(char *str, t_minishell *minishell, t_data **data);
 // Command execution
 
@@ -132,7 +132,6 @@ int		second_char_exists(char *str, char a);
 char	*check_str(char *f, char *str, char *cmd, char ***p);
 char	*check_if_command(char **envp, char *str);
 
-//static void	ft_check_var2(char *var, char *cmd);
 int		ft_check_var(char *var, char *cmd);
 int		ft_count_nodes(t_data *node);
 int		ft_dup_work(t_fd *fd, int mode);
@@ -161,31 +160,14 @@ t_data	*ft_commands(char **tokens, t_data *aux);
 void	here_doc(char *key, t_data *node);
 
 // builtins
-
-//Prints the path of the actual working directory
 void	ft_pwd(void);
-
-//Changes current working directoy, updating PWD and OLDPWD
 void	ft_chdir(char *dir, char ***env);
-
-//Adds/replaces variable in environment
-//Hay que meter '=' después de var porque si no puede confundir
-//variables que empiecen igual.
 void	ft_export(char **cmd, char ***env);
-void	ft_export_job(char *var, char *value, char ***env);
-
-//Prints the env
+void	ft_update_env_var(char *var, char *value, char ***env);
 void	ft_env(char **env, int mode);
-
-//Removes variable from environment
-//Si no coincide no hace nada
-//Hay que meter '=' después de var porque si no puede confundir
-//variables que empiecen igual.
 void	ft_unset(char *var, char ***env);
-
-//Prints arguments separated with a space followed by a new line
-//Flag "-n" - Do not output a trailing newline.
 void	ft_echo(char **cmd, char **env);
+void	ft_history(void);
 
 //builtins commands
 

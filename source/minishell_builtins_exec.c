@@ -40,18 +40,19 @@ void	ft_call_builtin(char **cmd, char ***envp)
 		while (cmd[++i])
 			if (ft_check_var(cmd[i], cmd[0]))
 				ft_unset(cmd[i], envp);
+	if (ft_strncmp(cmd[0], "history", ft_strlen(cmd[0])) == 0)
+		ft_history();
 	if (ft_builtncmp(cmd[0], "cd", ft_strlen(cmd[0])) == 0)
 		ft_chdir(cmd[1], envp);
 	if (ft_builtncmp(cmd[0], "env", ft_strlen(cmd[0])) == 0)
-		ft_env(*envp, 0);
+		ft_env(*envp, ENV_BASIC_FORMAT);
 	if (ft_builtncmp(cmd[0], "pwd", ft_strlen(cmd[0])) == 0)
 		ft_pwd();
 	if (ft_builtncmp(cmd[0], "echo", ft_strlen(cmd[0])) == 0)
 		ft_echo(&cmd[1], *envp);
 	if (ft_builtncmp(cmd[0], "$?", ft_strlen(cmd[0])) == 0)
 		ft_status(cmd[0]);
-	if (ft_builtncmp(cmd[0], "history", ft_strlen(cmd[0])) == 0)
-		ft_status(cmd[0]);
+
 }
 
 int	ft_is_builtin(char **cmd)
@@ -65,7 +66,8 @@ int	ft_is_builtin(char **cmd)
 				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "$?",
 					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 2)
 			|| (ft_builtncmp(cmd[0], "pwd", ft_strlen(cmd[0])) == 0
-				&& ft_strlen(cmd[0]) == 3))
+				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "history", 
+					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 7))
 			return (1);
 		if ((ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])) == 0
 				&& ft_strlen(cmd[0]) == 6) || (ft_strncmp(cmd[0], "unset",

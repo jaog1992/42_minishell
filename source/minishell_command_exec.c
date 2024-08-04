@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+extern int	g_status;
+
 static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb)
 {
 	if (node_nb == 1 && ft_is_builtin(node->cmd) == 2)
@@ -54,7 +56,11 @@ static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node)
 			exit(CMD_NOT_FOUND);
 	}
 	else
+	{
 		waitpid(pid, &ret, 0);
+		if (WIFEXITED(ret))
+		 	ret = WEXITSTATUS(ret);
+	}
 	return (ret);
 }
 
@@ -73,8 +79,9 @@ void	ft_fill_here_doc(t_data *node, int node_nb)
 		{
 			while (node->redirection[j])
 			{
-				if (ft_strncmp(node->redirection[j], "<<", \
-				ft_strlen(node->redirection[j])) == 0)
+				if ((ft_strncmp(node->redirection[j], "<<", \
+				ft_strlen(node->redirection[j]))) == 0 \
+				&& ft_strlen(node->redirection[j]) == 2)
 					here_doc(node->redirection[j + 1], node);
 				j++;
 			}

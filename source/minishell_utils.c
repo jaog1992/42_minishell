@@ -36,7 +36,7 @@ void	ft_freelistdata(t_data **lst)
 	}
 }
 
-int	check_redirection1(char **ptr)
+int	check_invalid_redirection(char **ptr)
 {
 	int	i;
 

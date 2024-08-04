@@ -36,7 +36,7 @@ int	ft_lexer(char *str, t_minishell *minishell, t_data **data)
 	free(aux);
 	*data = ft_redirection(minishell->tokens);
 	*data = ft_commands(minishell->tokens, *data);
-	g_status = check_redirection1((*data)->redirection);
+	g_status = check_invalid_redirection((*data)->redirection);
 	ft_free2dstr(minishell->tokens);
 	if (g_status)
 		return (g_status);
@@ -74,57 +74,57 @@ char	*ft_get_user_input(char **env)
 	return (aux);
 }
 
-void	ft_print_data(t_data **data)
-{
-	int		i;
-	t_data	*current;
+// void	ft_print_data(t_data **data)
+// {
+// 	int		i;
+// 	t_data	*current;
 
-	current = *data;
-	while (current)
-	{
-		printf("[input][%d]\n", current->input);
-		printf("[output][%d]\n", current->output);
-		printf("[here_doc][%d]\n", current->here_doc);
-		if (current->path)
-			printf("[path][%s]\n", current->path);
-		else
-			printf("No path data available\n");
-		i = 0;
-		if (current->cmd)
-		{
-			while (current->cmd[i] != NULL)
-			{
-				printf("[i][cmd][%d][%s]\n", i, current->cmd[i]);
-				i++;
-			}
-		}
-		else
-			printf("No command data available\n");
-		i = 0;
-		if (current->tokens)
-		{
-			while (current->tokens[i] != NULL)
-			{
-				printf("[i][tokens][%d][%s]\n", i, current->tokens[i]);
-				i++;
-			}
-		}
-		else
-			printf("No token data available\n");
-		i = 0;
-		if (current->redirection)
-		{
-			while (current->redirection[i] != NULL)
-			{
-				printf("[i][redir][%d][%s]\n", i, current->redirection[i]);
-				i++;
-			}
-		}
-		else
-			printf("No redirection data available\n");
-		current = current->next;
-	}
-}
+// 	current = *data;
+// 	while (current)
+// 	{
+// 		printf("[input][%d]\n", current->input);
+// 		printf("[output][%d]\n", current->output);
+// 		printf("[here_doc][%d]\n", current->here_doc);
+// 		if (current->path)
+// 			printf("[path][%s]\n", current->path);
+// 		else
+// 			printf("No path data available\n");
+// 		i = 0;
+// 		if (current->cmd)
+// 		{
+// 			while (current->cmd[i] != NULL)
+// 			{
+// 				printf("[i][cmd][%d][%s]\n", i, current->cmd[i]);
+// 				i++;
+// 			}
+// 		}
+// 		else
+// 			printf("No command data available\n");
+// 		i = 0;
+// 		if (current->tokens)
+// 		{
+// 			while (current->tokens[i] != NULL)
+// 			{
+// 				printf("[i][tokens][%d][%s]\n", i, current->tokens[i]);
+// 				i++;
+// 			}
+// 		}
+// 		else
+// 			printf("No token data available\n");
+// 		i = 0;
+// 		if (current->redirection)
+// 		{
+// 			while (current->redirection[i] != NULL)
+// 			{
+// 				printf("[i][redir][%d][%s]\n", i, current->redirection[i]);
+// 				i++;
+// 			}
+// 		}
+// 		else
+// 			printf("No redirection data available\n");
+// 		current = current->next;
+// 	}
+// }
 
 void	ft_program(t_minishell *minishell, t_data **data)
 {
@@ -143,12 +143,9 @@ void	ft_program(t_minishell *minishell, t_data **data)
 				g_status = ret;
 			if (!ret)
 				ft_exec(*data, &minishell->env);
-			ft_print_data(data);
 			if (*data)
 				ft_freelistdata(data);
 		}
-		// if (minishell->tokens)
-		// 	ft_free2dstr(minishell->tokens);
 	}
 	else if (str)
 		free(str);

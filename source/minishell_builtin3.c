@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jde-orma <jde-orma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/30 11:57:01 by amarzana          #+#    #+#             */
-/*   Updated: 2024/08/03 01:37:56 by jde-orma         ###   ########.fr       */
+/*   Created: 2022/08/01 10:02:15 by jde-orma          #+#    #+#             */
+/*   Updated: 2024/08/05 01:29:04 by jde-orma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 extern int	g_status;
 
-static char	**ft_rm_var(char *var, char **env)
+static char	**ft_remove_env_var(char *var, char **env)
 {
-	char	**new_env;
-	int		len;
 	int		i;
 	int		j;
+	int		len;
+	char	**new_env;
 
 	len = 0;
 	while (env[len])
@@ -62,7 +62,7 @@ void	ft_unset(char *var, char ***env)
 	}
 	if (coin != 0)
 	{
-		aux = ft_rm_var(var, env2);
+		aux = ft_remove_env_var(var, env2);
 		ft_free2dstr(env2);
 		*env = aux;
 	}
@@ -77,12 +77,12 @@ void	ft_chdir_prev(char *dir, char ***env)
 	dir = ft_getenvval(*env, "OLDPWD=");
 	old_pwd = ft_strdup(dir);
 	pwd = getcwd(NULL, 0);
-	ft_export_job("OLDPWD=", pwd, env);
+	ft_update_env_var("OLDPWD=", pwd, env);
 	free (pwd);
 	chdir(old_pwd);
 	free (old_pwd);
 	pwd = getcwd(NULL, 0);
-	ft_export_job("PWD=", pwd, env);
+	ft_update_env_var("PWD=", pwd, env);
 	free (pwd);
 }
 
@@ -104,11 +104,11 @@ void	ft_chdir(char *dir, char ***env)
 			g_status = 1;
 		}
 		pwd = getcwd(NULL, 0);
-		ft_export_job("OLDPWD=", pwd, env);
+		ft_update_env_var("OLDPWD=", pwd, env);
 		free (pwd);
 		chdir(dir);
 		pwd = getcwd(NULL, 0);
-		ft_export_job("PWD=", pwd, env);
+		ft_update_env_var("PWD=", pwd, env);
 		free (pwd);
 	}
 }

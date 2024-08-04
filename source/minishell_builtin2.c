@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jde-orma <jde-orma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 09:34:32 by amarzana          #+#    #+#             */
-/*   Updated: 2024/08/02 16:38:16 by jde-orma         ###   ########.fr       */
+/*   Created: 2022/08/01 09:34:32 by jde-orma          #+#    #+#             */
+/*   Updated: 2024/08/05 01:29:44 by jde-orma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	ft_edit_var(char *var, char *value, char ***env, int i)
 	return (0);
 }
 
-void	ft_export_job(char *var, char *value, char ***env)
+void	ft_update_env_var(char *var, char *value, char ***env)
 {
 	char	**env2;
 	char	**aux;
@@ -103,27 +103,27 @@ void	ft_export_job(char *var, char *value, char ***env)
 
 void	ft_export(char **cmd, char ***env)
 {
-	char	*var;
 	int		i;
+	char	*var;
 
-	var = NULL;
 	i = 1;
+	var = NULL;
 	if (!cmd[i])
-		ft_env(*env, 1);
+		ft_env(*env, ENV_EXPORT_FORMAT);
 	while (cmd[i])
 	{
 		var = ft_subst_var(cmd[i]);
 		if (var)
 		{
 			if (ft_check_var(var, cmd[0]))
-				ft_export_job(var, (ft_strchr(cmd[i], '=') + 1), env);
+				ft_update_env_var(var, (ft_strchr(cmd[i], '=') + 1), env);
 			free(var);
 			var = NULL;
 		}
 		else
 		{
 			if (ft_check_var(cmd[i], cmd[0]))
-				ft_export_job(cmd[i], NULL, env);
+				ft_update_env_var(cmd[i], NULL, env);
 		}
 		i++;
 	}

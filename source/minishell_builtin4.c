@@ -65,33 +65,24 @@ void	ft_str2ddupenv(t_minishell *minishell, char *str, int len)
 char	*ft_getenvval(char **env, char *str)
 {
 	int		i;
-	int		j;
-	int		flag;
-	char	*str2;
+	char	*envval;
+	char	*aux;
 
 	i = 0;
-	j = 0;
-	flag = 0;
-	if (!env || !str)
-		return (NULL);
+	envval = NULL;
+	aux = ft_strjoin(str, "=");
 	while (env[i])
 	{
-		while (str[j])
+		if (ft_strnstr(env[i], aux, ft_strlen(aux)))
 		{
-			if (str[j] != env[i][j])
-				flag++;
-			j++;
+			envval = ft_strchr(env[i], '=');
+			free(aux);
+			return (++envval);
 		}
-		if (flag == 0)
-			break ;
-		j = 0;
-		flag = 0;
 		i++;
 	}
-	if (!env[i] || j == 0)
-		return (NULL);
-	str2 = ft_strdup(env[i] + ft_strlen(str) + 1);
-	return (str2);
+	free(aux);
+	return ("");
 }
 
 void	ft_history(void)
