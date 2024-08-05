@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int	ft_dup_work(t_fd *fd, int mode)
+int	ft_dup_manager(t_fd *fd, int mode)
 {
 	if (fd->fdin == -1)
 	{
@@ -65,7 +65,7 @@ void	ft_redirection_dup(char **redir, t_fd *fd, t_data *node)
 
 void	ft_child(t_data *node, char **envp, t_fd *fd, int ret)
 {
-	ft_dup_work(fd, 0);
+	ft_dup_manager(fd, 0);
 	if (node->cmd)
 	{
 		if (ft_isbuiltin(node->cmd))

@@ -65,6 +65,7 @@
         1. `add_history()`: Añadir el string al history con la funcionalidad de `readline()`'
         2. `ft_variable_expansion_check()`: Expandir las variables de entorno. Si se usan comillas simples se interpretaran como literales, pero al usar comillas dobles o no usar comillas se expandirá el valor de sus variables
         3. `ft_get_tokens()`: Clasificar el string de entrada en tokens delimitados por espacios, comillas dobles, comillas simples o pipes. Se realiza el trimado de espacios y tabuladores adicionales.
+        Tokens es un char ** y cada string clasificado usa 2 char *: uno con el string clasificado. Otro de misma longitud con '0' para indicar que no se ha modificado el primero o con '1' para indicar que se han eliminado las comillas. Se usa para depurar errores y mejorar la mantenibilidad.
         4. `check_invalid_pipe()`: Chequear que la sintaxis de los pipes sea correcta: que conduzcan a algun sitio
         5. `ft_redirection()`: Inicializar la estructura data insertando los valores de las redirecciones, de haberlas, en el char **redirections. Los pipes definen la separación entre nodos de la lista enlazada que es data, por lo que habrá tantos nodos como `num_pipes + 1`
         6. `ft_commands()`: Añadir los comandos en el char **cmd de cada nodo
@@ -79,7 +80,7 @@
         Hará un proceso hijo que lanza `double_redirection()`, el cual hace una gestión de la entrada de usuario con readline. Cuando se lee la key establecida en el heredoc se termina la entrada de datos de usuario (`command < key`)
         El proceso padre espera la ejecución del hijo y sobrescribe el valor de int heredoc con el fd de entrada.
         4. `ft_single_builtin()`: Se evalua si el comando del nodo es un builtin o no. En caso de que lo sea se llama a `ft_call_builtin()` y se compara el string del comando con los literales de cada builtin. Si coincide se ejecuta el builtin, si no sigue el código.
-        `ft_dup_work()` gestiona la redicción de archivos ajustando los descriptores de archivo estandar fd_in y fd_out
+        `ft_dup_manager()` gestiona la redicción de archivos ajustando los descriptores de archivo estandar fd_in y fd_out
         `ft_redirection_dup()` Hace la gestion de las redirecciones. Se añaden defines para que los modos de las mismas sean más entendibles. Esta función llama a su vez a `ft_get_redirection_fd()` que a su vez se encarga de gestionar el cierre y sobrescritura de cada fd para el caso oportuno.
         5. `ft_exec_loop()`: 
             `ft_signals_in_cat()`: Primero gestiona las señales en caso de que sea un cat, ya que este es un proceso bloqueante y las señales SIGINT y SIGQUIT se comportan diferente. Ctrl+C corta el comando e introduce un salto de linea y Ctrl+\ además pone el texto `Quit`
@@ -88,7 +89,7 @@
             `ft_check_cmd()`: Comprueba si el comando tiene path asignado o es un builting. Si no tiene path asignado comprueba que no sea el comando exit y añade el valor de comando no encontrado al g_status, además de mostrar un mensaje de error. Tambien resetea los fd-s.
         Se usa `WIFEXITED` para saber si el comando ha salido con algun error y consultarlo en `WEXITSTATUS`.
         Se cierran los fd-s y se vuelve al main para liberar la memoria asignada a los nodos y volver a capturar el input de usuario
-    5. BUILTINS
+    1. BUILTINS
         Separamos los builtins de la parte del exe por tener entidad propia en el enunciado:
         - `echo`: Imprime los argumentos separados por espacio y añade un \n. Con el argumento -n no imprime \n.
         Procesa variables como `~` o `~/` (imprime el valor de $HOME con y sin barra) y `$?` (imprime el valor de g_status)

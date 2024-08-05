@@ -92,6 +92,7 @@ void	ft_signals_in_cat(void);
 
 // status
 int		ft_status(char *str);
+
 // Exit function
 int		ft_exit(char *str);
 char	*ft_getenvval(char **env, char *str);
@@ -136,7 +137,7 @@ char	*check_if_command(char **envp, char *str);
 
 int		ft_check_var(char *var, char *cmd);
 int		ft_count_nodes(t_data *node);
-int		ft_dup_work(t_fd *fd, int mode);
+int		ft_dup_manager(t_fd *fd, int mode);
 void	ft_redirection_dup(char **redir, t_fd *fd, t_data *node);
 void	ft_child(t_data *node, char **envp, t_fd *fd, int ret);
 void	ft_pipex(t_data *node, char **envp, t_fd *fd, int ret);

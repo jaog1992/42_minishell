@@ -24,7 +24,7 @@ static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb)
 	{
 		ft_redirection_dup(node->redirection, &fd, node);
 		ft_close(&fd.fdin, 0);
-		if (ft_dup_work(&fd, 1))
+		if (ft_dup_manager(&fd, 1))
 			ft_call_builtin(node->cmd, envp);
 		return (0);
 	}
