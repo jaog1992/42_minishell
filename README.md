@@ -79,8 +79,8 @@
         Hará un proceso hijo que lanza `double_redirection()`, el cual hace una gestión de la entrada de usuario con readline. Cuando se lee la key establecida en el heredoc se termina la entrada de datos de usuario (`command < key`)
         El proceso padre espera la ejecución del hijo y sobrescribe el valor de int heredoc con el fd de entrada.
         4. `ft_single_builtin()`: Se evalua si el comando del nodo es un builtin o no. En caso de que lo sea se llama a `ft_call_builtin()` y se compara el string del comando con los literales de cada builtin. Si coincide se ejecuta el builtin, si no sigue el código.
-        `ft_dup_work()` gestiona la redicción de archivos ajustando los descriotres de archivo estandar fd_in y fd_out
-        `ft_dups()` Hace la gestion de las redirecciones. Se añaden defines para que los modos de las mismas sean más entendibles. Esta función llama a su vez a `ft_get_fd()` que a su vez se encarga de gestionar el cierre y sobrescritura de cada fd para el caso oportuno.
+        `ft_dup_work()` gestiona la redicción de archivos ajustando los descriptores de archivo estandar fd_in y fd_out
+        `ft_redirection_dup()` Hace la gestion de las redirecciones. Se añaden defines para que los modos de las mismas sean más entendibles. Esta función llama a su vez a `ft_get_redirection_fd()` que a su vez se encarga de gestionar el cierre y sobrescritura de cada fd para el caso oportuno.
         5. `ft_exec_loop()`: 
             `ft_signals_in_cat()`: Primero gestiona las señales en caso de que sea un cat, ya que este es un proceso bloqueante y las señales SIGINT y SIGQUIT se comportan diferente. Ctrl+C corta el comando e introduce un salto de linea y Ctrl+\ además pone el texto `Quit`
 

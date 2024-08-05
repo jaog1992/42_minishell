@@ -17,22 +17,19 @@
 
 extern int	g_status;
 
-// CMD_NOT_FOUND 127 -> 1111111 | 32512 -> 111111100000000
-// CMD_SUCCESS 0 -> 00000000 | 512 -> 1000000000
-// CMD_GENERIC_ERROR 1 -> 00000001 | 256 -> 100000000
 int	ft_status(char *str)
 {
-	if (g_status == 32512)
+	if (g_status == CMD_NOT_FOUND_SHIFTED)
 		g_status = CMD_NOT_FOUND;
-	if (g_status == 512)
+	if (g_status == CMD_SUCCESS_SHIFTED)
 		g_status = CMD_SUCCESS;
-	if (g_status == 256)
+	if (g_status == CMD_GENERIC_ERROR_SHIFTED)
 		g_status = CMD_GENERIC_ERROR;
 	if (ft_strncmp(str, "$?", 2) == 0 && ft_strlen(str) == 2)
 	{
 		printf("%d: command not found\n", g_status);
 		add_history(str);
-		g_status = 127;
+		g_status = CMD_NOT_FOUND;
 		return (0);
 	}
 	return (1);

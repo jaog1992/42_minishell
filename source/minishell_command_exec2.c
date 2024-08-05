@@ -41,7 +41,7 @@ int	ft_dup_work(t_fd *fd, int mode)
 	return (1);
 }
 
-void	ft_dups(char **redir, t_fd *fd, t_data *node)
+void	ft_redirection_dup(char **redir, t_fd *fd, t_data *node)
 {
 	int	i;
 
@@ -51,13 +51,13 @@ void	ft_dups(char **redir, t_fd *fd, t_data *node)
 		while (redir[i])
 		{
 			if (ft_strncmp(redir[i], "<", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], INPUT_REDIRECTION, fd, node);
+				ft_get_redirection_fd(redir[i + 1], INPUT_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], OUTPUT_REDIRECTION, fd, node);
+				ft_get_redirection_fd(redir[i + 1], OUTPUT_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">>", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], OUTPUT_REDIRECTION_APPEND, fd, node);
+				ft_get_redirection_fd(redir[i + 1], OUTPUT_REDIRECTION_APPEND, fd, node);
 			else if (ft_strncmp(redir[i], "<<", ft_strlen(redir[i])) == 0)
-				ft_get_fd(redir[i + 1], HERE_DOCUMENT, fd, node);
+				ft_get_redirection_fd(redir[i + 1], HERE_DOCUMENT, fd, node);
 			i++;
 		}
 	}
@@ -68,7 +68,7 @@ void	ft_child(t_data *node, char **envp, t_fd *fd, int ret)
 	ft_dup_work(fd, 0);
 	if (node->cmd)
 	{
-		if (ft_is_builtin(node->cmd))
+		if (ft_isbuiltin(node->cmd))
 		{
 			ft_call_builtin(node->cmd, &envp);
 			ret = 0;
@@ -84,7 +84,7 @@ void	ft_pipex(t_data *node, char **envp, t_fd *fd, int ret)
 {
 	pid_t	pid;
 
-	ft_dups(node->redirection, fd, node);
+	ft_redirection_dup(node->redirection, fd, node);
 	pipe(fd->pipe);
 	pid = fork();
 	if (pid < 0)
@@ -109,21 +109,21 @@ void	ft_pipex(t_data *node, char **envp, t_fd *fd, int ret)
 
 int	ft_check_cmd(t_data *node, t_fd *fd, int *ret, int mode)
 {
-	if (node->path || ft_is_builtin(node->cmd))
+	if (node->path || ft_isbuiltin(node->cmd))
 		return (1);
 	if (node->cmd)
 	{
 		if (ft_strncmp(node->cmd[0], "exit", ft_strlen(node->cmd[0])) == 0
 			&& ft_strlen(node->cmd[0]) == 4)
 			return (0);
-		*ret = 32512;
+		*ret = CMD_NOT_FOUND_SHIFTED;
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(node->cmd[0], 2);
 		ft_putendl_fd(" command not found", 2);
 		ft_close(&fd->fdin, 1);
 		ft_close(&fd->fdout, 1);
 	}
-	ft_dups(node->redirection, fd, node);
+	ft_redirection_dup(node->redirection, fd, node);
 	if (mode == 1)
 		close(STDIN_FILENO);
 	ft_reset_fd(fd);

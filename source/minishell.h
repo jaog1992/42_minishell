@@ -33,9 +33,13 @@
 # define DEF_COLOR "\001\e[0;39m\002"
 
 // COMMAND EXIT STATUS DEFINES (g_status)
+// SHIFTED VERSIONS ARE SHIFTED << 8
 # define CMD_NOT_FOUND 127
+# define CMD_NOT_FOUND_SHIFTED 32512 
 # define CMD_SUCCESS 0
+# define CMD_SUCCESS_SHIFTED 512
 # define CMD_GENERIC_ERROR 1
+# define CMD_GENERIC_ERROR_SHIFTED 256
 
 // REDIRECTION TYPE DEFINES
 # define INPUT_REDIRECTION 0
@@ -103,7 +107,6 @@ int		check_next_char(char c);
 char	*ft_variable_expansion_check(char *str, t_minishell *minishell);
 
 // Tokens
-
 int		check_assign(int check, char a, char **quote, char *c);
 void	count_assign(char **aux, char **quote, int *x, char a);
 int		ft_isdupchar(char *str);
@@ -118,12 +121,11 @@ char	**ft_get_tokens(char *str);
 int		ft_count_tokens(char *str);
 
 // General
-
 void	ft_freelistdata(t_data **lst);
 int		check_invalid_redirection(char **ptr);
 int		ft_lexer(char *str, t_minishell *minishell, t_data **data);
-// Command execution
 
+// Command execution
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
 void	ft_call_builtin(char **cmd, char ***envp);
 char	*ft_subst_var(char *var);
@@ -135,11 +137,11 @@ char	*check_if_command(char **envp, char *str);
 int		ft_check_var(char *var, char *cmd);
 int		ft_count_nodes(t_data *node);
 int		ft_dup_work(t_fd *fd, int mode);
-void	ft_dups(char **redir, t_fd *fd, t_data *node);
+void	ft_redirection_dup(char **redir, t_fd *fd, t_data *node);
 void	ft_child(t_data *node, char **envp, t_fd *fd, int ret);
 void	ft_pipex(t_data *node, char **envp, t_fd *fd, int ret);
 int		ft_check_cmd(t_data *node, t_fd *fd, int *ret, int mode);
-void	ft_get_fd(char *file, int mode, t_fd *fd, t_data *node);
+void	ft_get_redirection_fd(char *file, int mode, t_fd *fd, t_data *node);
 void	ft_close(int *fd, int mode);
 void	ft_init_fd(t_fd *fd);
 void	ft_close_fd(t_fd *fd);
@@ -148,14 +150,14 @@ void	ft_init_fd(t_fd *fd);
 void	ft_fill_here_doc(t_data *node, int node_nb);
 void	ft_exec(t_data *node, char ***envp);
 
-//redirection
+// redirection
 t_data	*ft_redirection(char **tokens);
 t_data	*init_data(void);
 t_data	*ft_listlastnode(t_data *lst);
 void	ft_listaddnodetoend(t_data **lst, t_data *new);
 int		check_invalid_pipe(char **tokens);
 
-//commands
+// commands
 t_data	*ft_commands(char **tokens, t_data *aux);
 void	here_doc(char *key, t_data *node);
 
@@ -169,9 +171,9 @@ void	ft_unset(char *var, char ***env);
 void	ft_echo(char **cmd, char **env);
 void	ft_history(void);
 
-//builtins commands
-
+// builtins command utils
 int		ft_builtncmp(const char *s1, const char *s2, size_t n);
 void	ft_call_builtin(char **cmd, char ***envp);
-int		ft_is_builtin(char **cmd);
+int		ft_isbuiltin(char **cmd);
+
 #endif

@@ -94,12 +94,12 @@ void	fill_cmd_path(t_data *list, char **envp)
 	{
 		if (list->cmd)
 		{
-			if (list->cmd && !ft_is_builtin(list->cmd))
+			if (list->cmd && !ft_isbuiltin(list->cmd))
 				path = check_if_command(envp, list->cmd[0]);
 			if (path != 0)
 				list->path = path;
 		}
-		if (ft_is_builtin(list->cmd) > 0)
+		if (ft_isbuiltin(list->cmd) > 0)
 			list->path = NULL;
 		if (list->next == NULL)
 			break ;

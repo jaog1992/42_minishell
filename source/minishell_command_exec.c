@@ -20,9 +20,9 @@ extern int	g_status;
 
 static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb)
 {
-	if (node_nb == 1 && ft_is_builtin(node->cmd) == 2)
+	if (node_nb == 1 && ft_isbuiltin(node->cmd) == 2)
 	{
-		ft_dups(node->redirection, &fd, node);
+		ft_redirection_dup(node->redirection, &fd, node);
 		ft_close(&fd.fdin, 0);
 		if (ft_dup_work(&fd, 1))
 			ft_call_builtin(node->cmd, envp);
@@ -49,7 +49,7 @@ static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node)
 		}
 		if (ft_check_cmd(node, fd, &ret, 0))
 		{
-			ft_dups(node->redirection, fd, node);
+			ft_redirection_dup(node->redirection, fd, node);
 			ft_child(node, *envp, fd, ret);
 		}
 		else

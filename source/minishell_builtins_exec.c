@@ -55,7 +55,7 @@ void	ft_call_builtin(char **cmd, char ***envp)
 
 }
 
-int	ft_is_builtin(char **cmd)
+int	ft_isbuiltin(char **cmd)
 {
 	if (cmd)
 	{

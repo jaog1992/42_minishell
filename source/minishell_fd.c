@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-void	ft_get_fd(char *file, int mode, t_fd *fd, t_data *node)
+void	ft_get_redirection_fd(char *file, int mode, t_fd *fd, t_data *node)
 {
 	if (mode == INPUT_REDIRECTION)
 	{
