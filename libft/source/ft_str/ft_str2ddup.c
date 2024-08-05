@@ -18,9 +18,9 @@ char	**ft_str2ddup(char **str)
 	char	**str2ddup;
 
 	len = ft_str2dlen(str);
-	str2ddup = (char**) malloc(sizeof(char*) * (len + 1));
+	str2ddup = (char **) malloc(sizeof(char *) * (len + 1));
 	str2ddup[len--] = NULL;
-	while(len >= 0)
+	while (len >= 0)
 	{
 		str2ddup[len] = ft_strdup(str[len]);
 		len--;

@@ -29,9 +29,8 @@ char	*add_new_line_char(char *aux, char *str)
 	return (aux);
 }
 
-char	*double_redirection(char *key)
+void	double_redirection(char *key, char *aux)
 {
-	char	*aux;
 	char	*str;
 
 	aux = 0;
@@ -56,7 +55,7 @@ char	*double_redirection(char *key)
 	}
 	if (str)
 		free(str);
-	return (aux);
+	return ;
 }
 
 void	print2buffer(char *str, int fd)
@@ -76,10 +75,11 @@ void	here_doc(char *key, t_data *node)
 
 	pipe(fd1);
 	pid = fork();
+	str = 0;
 	if (pid == 0)
 	{
 		close(fd1[0]);
-		str = double_redirection(key);
+		double_redirection(key, str);
 		if (str)
 			print2buffer(str, fd1[1]);
 		close(fd1[1]);

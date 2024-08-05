@@ -52,7 +52,6 @@ void	ft_call_builtin(char **cmd, char ***envp)
 		ft_echo(&cmd[1], *envp);
 	if (ft_builtncmp(cmd[0], "$?", ft_strlen(cmd[0])) == 0)
 		ft_status(cmd[0]);
-
 }
 
 int	ft_isbuiltin(char **cmd)
@@ -66,7 +65,7 @@ int	ft_isbuiltin(char **cmd)
 				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "$?",
 					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 2)
 			|| (ft_builtncmp(cmd[0], "pwd", ft_strlen(cmd[0])) == 0
-				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "history", 
+				&& ft_strlen(cmd[0]) == 3) || (ft_builtncmp(cmd[0], "history",
 					ft_strlen(cmd[0])) == 0 && ft_strlen(cmd[0]) == 7))
 			return (1);
 		if ((ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])) == 0

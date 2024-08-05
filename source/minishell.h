@@ -42,9 +42,9 @@
 # define CMD_GENERIC_ERROR_SHIFTED 256
 
 // REDIRECTION TYPE DEFINES
-# define INPUT_REDIRECTION 0
-# define OUTPUT_REDIRECTION 1
-# define OUTPUT_REDIRECTION_APPEND 2
+# define IN_REDIRECTION 0
+# define OUT_REDIRECTION 1
+# define OUT_REDIR_APPEND 2
 # define HERE_DOCUMENT 3
 
 // FT_ENV MODES
@@ -81,7 +81,6 @@ typedef struct s_fd
 	int		here_doc;
 	char	*key;
 }			t_fd;
-
 
 // Signals
 void	rl_replace_line(const char *text, int clear_undo);

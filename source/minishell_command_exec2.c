@@ -51,11 +51,11 @@ void	ft_redirection_dup(char **redir, t_fd *fd, t_data *node)
 		while (redir[i])
 		{
 			if (ft_strncmp(redir[i], "<", ft_strlen(redir[i])) == 0)
-				ft_get_redirection_fd(redir[i + 1], INPUT_REDIRECTION, fd, node);
+				ft_get_redirection_fd(redir[i + 1], IN_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">", ft_strlen(redir[i])) == 0)
-				ft_get_redirection_fd(redir[i + 1], OUTPUT_REDIRECTION, fd, node);
+				ft_get_redirection_fd(redir[i + 1], OUT_REDIRECTION, fd, node);
 			else if (ft_strncmp(redir[i], ">>", ft_strlen(redir[i])) == 0)
-				ft_get_redirection_fd(redir[i + 1], OUTPUT_REDIRECTION_APPEND, fd, node);
+				ft_get_redirection_fd(redir[i + 1], OUT_REDIR_APPEND, fd, node);
 			else if (ft_strncmp(redir[i], "<<", ft_strlen(redir[i])) == 0)
 				ft_get_redirection_fd(redir[i + 1], HERE_DOCUMENT, fd, node);
 			i++;

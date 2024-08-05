@@ -18,17 +18,17 @@
 
 void	ft_get_redirection_fd(char *file, int mode, t_fd *fd, t_data *node)
 {
-	if (mode == INPUT_REDIRECTION)
+	if (mode == IN_REDIRECTION)
 	{
 		ft_close(&fd->fdin, 0);
 		fd->fdin = open(file, O_RDONLY);
 	}
-	else if (mode == OUTPUT_REDIRECTION)
+	else if (mode == OUT_REDIRECTION)
 	{
 		ft_close(&fd->fdout, 0);
 		fd->fdout = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	}
-	else if (mode == OUTPUT_REDIRECTION_APPEND)
+	else if (mode == OUT_REDIR_APPEND)
 	{
 		ft_close(&fd->fdout, 0);
 		fd->fdout = open(file, O_CREAT | O_RDWR | O_APPEND, 0644);

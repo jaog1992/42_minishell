@@ -19,7 +19,7 @@ int	ft_str2dlen(char **str)
 	i = 0;
 	if (!str)
 		return (0);
-	while(str[i] != NULL)
+	while (str[i] != NULL)
 		i++;
 	return (i);
 }

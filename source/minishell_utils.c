@@ -62,3 +62,16 @@ int	check_invalid_redirection(char **ptr)
 	}
 	return (0);
 }
+
+int	ft_count_nodes(t_data *node)
+{
+	int		node_nb;
+
+	node_nb = 1;
+	while (node->next)
+	{
+		node_nb++;
+		node = node->next;
+	}
+	return (node_nb);
+}

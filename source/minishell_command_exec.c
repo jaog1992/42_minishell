@@ -31,6 +31,14 @@ static int	ft_single_builtin(t_data *node, t_fd fd, char ***envp, int node_nb)
 	return (1);
 }
 
+int	ft_exec_loop_helper(int pid, int ret)
+{
+	waitpid(pid, &ret, 0);
+	if (WIFEXITED(ret))
+		ret = WEXITSTATUS(ret);
+	return (ret);
+}
+
 static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node)
 {
 	int	ret;
@@ -56,11 +64,7 @@ static int	ft_exec_loop(int node_nb, t_fd *fd, char ***envp, t_data *node)
 			exit(CMD_NOT_FOUND);
 	}
 	else
-	{
-		waitpid(pid, &ret, 0);
-		if (WIFEXITED(ret))
-		 	ret = WEXITSTATUS(ret);
-	}
+		ret = ft_exec_loop_helper(pid, ret);
 	return (ret);
 }
 
@@ -89,19 +93,6 @@ void	ft_fill_here_doc(t_data *node, int node_nb)
 		node = node->next;
 		i++;
 	}
-}
-
-int	ft_count_nodes(t_data *node)
-{
-	int		node_nb;
-
-	node_nb = 1;
-	while (node->next)
-	{
-		node_nb++;
-		node = node->next;
-	}
-	return (node_nb);
 }
 
 void	ft_exec(t_data *node, char ***envp)
