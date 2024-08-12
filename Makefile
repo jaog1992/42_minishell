@@ -1,5 +1,5 @@
 # Coder Alias
-USER_NAME   = "nkrasimi/jde-orma"
+USER_NAME   = "jde-orma"
 
 # Compiler and flags
 CC          = gcc
